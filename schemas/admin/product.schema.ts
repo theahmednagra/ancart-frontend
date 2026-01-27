@@ -7,6 +7,7 @@ export const productSchema = z.object({
     description: z.string().min(1, "Description is required"),
     categoryId: z.string().min(1, "Category is required"),
     image: z.instanceof(File, { message: "Image is required" }),
+    isActive: z.coerce.boolean().optional().default(true),
 });
 
 export type ProductInput = z.infer<typeof productSchema>;

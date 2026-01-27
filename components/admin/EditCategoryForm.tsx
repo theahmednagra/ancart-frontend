@@ -5,10 +5,15 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod';
 import api from '@/services/api';
 import { toast } from 'sonner';
+// import { useParams } from 'next/navigation';
 
-const CategoryForm = () => {
+const EditCategoryForm = ({ categoryId }: { categoryId: string }) => {
+    // const params = useParams();
+    // const categoryId = params.categoryId as string;
+
     const [isLoading, setIsLoading] = useState(false);
     const [preview, setPreview] = useState<string | null>(null);
+    const [category, setCategory] = useState<any>("");
 
     useEffect(() => {
         return () => {
@@ -16,10 +21,28 @@ const CategoryForm = () => {
         };
     }, [preview]);
 
+
+    useEffect(() => {
+        const fetchCategory = async () => {
+            try {
+                const res = await api.get(`/admin/categories/get-category-by-id/${categoryId}`);
+                setCategory(res.data.category);
+
+            } catch (err) {
+                toast.error(err instanceof Error ? err.message : "Something went wrong");
+            }
+        };
+
+        fetchCategory();
+    }, []);
+
+
     const { register, handleSubmit, formState, setValue } = useForm({
         resolver: zodResolver(categorySchema),
-    })
+    });
+
     const { errors } = formState;
+
 
     const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -29,6 +52,7 @@ const CategoryForm = () => {
         }
     }
 
+
     const onFormSubmit = async (data: CategoryInput) => {
         try {
             setIsLoading(true);
@@ -37,8 +61,8 @@ const CategoryForm = () => {
             formData.append("name", data.name);
             formData.append("image", data.image);
 
-            const res = await api.post(
-                "/admin/categories/create-category",
+            const res = await api.patch(
+                `/admin/categories/update-category/${categoryId}`,
                 formData,
                 {
                     headers: {
@@ -47,7 +71,7 @@ const CategoryForm = () => {
                 }
             );
 
-            toast.success("Category added");
+            toast.success("Category edited");
             setPreview(null);
             return res.data;
 
@@ -66,6 +90,7 @@ const CategoryForm = () => {
                 <input
                     type="text"
                     placeholder='Category Name'
+                    defaultValue={category?.name}
                     {...register("name")}
                     className=''
                 />
@@ -74,6 +99,7 @@ const CategoryForm = () => {
                 <input
                     type="file"
                     accept='image/*'
+                    defaultValue={category?.image}
                     onChange={handleImage}
                     className=''
                 />
@@ -85,12 +111,21 @@ const CategoryForm = () => {
                     </div>
                 )}
 
+                <select
+                    {...register("isActive")}
+                    defaultValue="true"
+                >
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                </select>
+                {errors.isActive && <p>{errors.isActive.message}</p>}
+
                 <button type="submit" disabled={isLoading}>
-                    {isLoading ? "Saving..." : "Add Category"}
+                    {isLoading ? "Saving..." : "Save Category"}
                 </button>
             </form>
         </div>
     )
 }
 
-export default CategoryForm;
+export default EditCategoryForm;

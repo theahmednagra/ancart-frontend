@@ -5,3 +5,7 @@
 //   return res.data;
 // }
 // getProducts();
+
+
+// Remove the zod validation from edit forms
+// Some fields are not getting the default value in edit forms
