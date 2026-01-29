@@ -5,34 +5,62 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import api from "@/services/api";
 import { toast } from "sonner";
-import { ProductInput, productSchema } from "@/schemas/admin/product.schema";
+import { UpdateProductInput, updateProductSchema } from "@/schemas/admin/updateProduct.schema";
 import { Upload } from "lucide-react";
 import { motion } from "framer-motion";
 
-const ProductForm = ({ onProductAdded }: { onProductAdded: any }) => {
+const UpdateProductForm = ({ productId, onUpdate }: { productId: string, onUpdate: any }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [preview, setPreview] = useState<string | null>(null);
     const [categories, setCategories] = useState<any[]>([]);
+    const [product, setProduct] = useState<any>(null);
 
     const {
         register,
         handleSubmit,
         formState: { errors },
         setValue,
+        reset,
     } = useForm({
-        resolver: zodResolver(productSchema),
+        resolver: zodResolver(updateProductSchema),
     });
 
     useEffect(() => {
-        if (preview) return () => URL.revokeObjectURL(preview);
+        return () => {
+            if (preview) URL.revokeObjectURL(preview);
+        };
     }, [preview]);
 
     useEffect(() => {
-        api
-            .get("/admin/categories/get-all-categories")
-            .then((res) => setCategories(res.data.categories))
-            .catch(() => toast.error("Failed to load categories"));
-    }, []);
+        const fetchData = async () => {
+            try {
+                const [catRes, prodRes] = await Promise.all([
+                    api.get("/admin/categories/get-all-categories"),
+                    api.get(`/admin/products/get-product-by-id/${productId}`),
+                ]);
+                setCategories(catRes.data.categories);
+                setProduct(prodRes.data.product);
+            } catch {
+                toast.error("Failed to load product or categories");
+            }
+        };
+        fetchData();
+    }, [productId]);
+
+
+
+    useEffect(() => {
+        if (!product) return;
+        reset({
+            name: product.name,
+            price: product.price,
+            stock: product.stock,
+            description: product.description,
+            categoryId: product.category?._id,
+            isActive: product.isActive ? "true" : "false",
+        });
+        setPreview(product.imageUrl || null);
+    }, [product, reset]);
 
     const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -42,29 +70,30 @@ const ProductForm = ({ onProductAdded }: { onProductAdded: any }) => {
         }
     };
 
-    const onFormSubmit = async (data: ProductInput) => {
+    const onFormSubmit = async (data: UpdateProductInput) => {
         try {
             setIsLoading(true);
 
             const formData = new FormData();
-            
-            formData.append("name", data.name);
-            formData.append("image", data.image);
+
+            formData.append("name", data.name as string);
+            if (data.image) formData.append("image", data.image as File);
             formData.append("price", String(data.price));
             formData.append("stock", String(data.stock));
-            formData.append("categoryId", data.categoryId);
-            formData.append("description", data.description);
+            formData.append("categoryId", data.categoryId as string);
+            formData.append("description", data.description as string);
+            formData.append("isActive", String(data.isActive));
 
-            const res = await api.post(
-                "/admin/products/create-product",
+            const res = await api.patch(
+                `/admin/products/update-product/${productId}`,
                 formData,
                 { headers: { "Content-Type": "multipart/form-data" } }
             );
-            toast.success("Product added successfully");
-            setPreview(null);
-            onProductAdded?.(res.data.product)
-        } catch (err: any) {
-            toast.error(err?.response?.data?.message || "Something went wrong");
+            toast.success("Product updated successfully");
+            setPreview(product.imageUrl || null);
+            onUpdate?.(res.data.product); // live data updates
+        } catch {
+            toast.error("Failed to update product");
         } finally {
             setIsLoading(false);
         }
@@ -76,13 +105,11 @@ const ProductForm = ({ onProductAdded }: { onProductAdded: any }) => {
             animate={{ opacity: 1, y: 0 }}
             className="max-w-4xl mx-auto mt-8 bg-white border border-neutral-200 rounded-2xl shadow-sm p-8"
         >
-            <h2 className="text-2xl font-semibold mb-1">Add product</h2>
-            <p className="text-sm text-neutral-500 mb-6">
-                Products appear in your store catalog
-            </p>
+            <h2 className="text-2xl font-semibold text-neutral-900 mb-1">Update product</h2>
+            <p className="text-sm text-neutral-500 mb-6">Edit product details below</p>
 
             <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
-                {/* Top row */}
+                {/* Top row: Name, Price, Stock */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     {["name", "price", "stock"].map((field) => (
                         <div key={field}>
@@ -92,9 +119,9 @@ const ProductForm = ({ onProductAdded }: { onProductAdded: any }) => {
                                 {...register(field as any)}
                                 className="w-full rounded-lg border border-neutral-300 px-4 py-3 text-sm focus:ring-2 focus:ring-black focus:outline-none"
                             />
-                            {errors[field as keyof ProductInput] && (
+                            {errors[field as keyof UpdateProductInput] && (
                                 <p className="mt-1 text-xs text-red-500">
-                                    {errors[field as keyof ProductInput]?.message as string}
+                                    {errors[field as keyof UpdateProductInput]?.message as string}
                                 </p>
                             )}
                         </div>
@@ -116,9 +143,7 @@ const ProductForm = ({ onProductAdded }: { onProductAdded: any }) => {
                             ))}
                         </select>
                         {errors.categoryId && (
-                            <p className="mt-1 text-xs text-red-500">
-                                {errors.categoryId.message}
-                            </p>
+                            <p className="mt-1 text-xs text-red-500">{errors.categoryId.message}</p>
                         )}
                     </div>
 
@@ -150,26 +175,40 @@ const ProductForm = ({ onProductAdded }: { onProductAdded: any }) => {
                 <div>
                     <textarea
                         {...register("description")}
-                        rows={4}
                         placeholder="Product description"
+                        rows={4}
                         className="w-full rounded-lg border border-neutral-300 px-4 py-3 text-sm focus:ring-2 focus:ring-black focus:outline-none"
                     />
                     {errors.description && (
-                        <p className="mt-1 text-xs text-red-500">
-                            {errors.description.message}
-                        </p>
+                        <p className="mt-1 text-xs text-red-500">{errors.description.message}</p>
                     )}
                 </div>
 
+                {/* Status */}
+                <div>
+                    <select
+                        {...register("isActive")}
+                        className="w-full rounded-lg border border-neutral-300 px-4 py-3 text-sm focus:ring-2 focus:ring-black focus:outline-none"
+                    >
+                        <option value="true">Active</option>
+                        <option value="false">Inactive</option>
+                    </select>
+                    {errors.isActive && (
+                        <p className="mt-1 text-xs text-red-500">{errors.isActive.message}</p>
+                    )}
+                </div>
+
+                {/* Submit */}
                 <button
+                    type="submit"
                     disabled={isLoading}
                     className="w-full rounded-lg bg-black py-3 text-sm font-medium text-white hover:opacity-90 transition disabled:opacity-50"
                 >
-                    {isLoading ? "Saving..." : "Add product"}
+                    {isLoading ? "Saving..." : "Save product"}
                 </button>
             </form>
         </motion.div>
     );
 };
 
-export default ProductForm;
+export default UpdateProductForm;
