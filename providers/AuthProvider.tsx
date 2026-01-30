@@ -5,7 +5,7 @@ import { Provider, useDispatch, useSelector } from "react-redux";
 import api from "@/services/api";
 import { setUser, removeUser, setAuthLoading } from "@/store/AuthSlice";
 import store, { RootState } from "../store/store";
-import Loader from "@/components/Loader";
+import Loader from "@/components/public/Loader";
 
 // Internal component that handles auth logic
 const AuthLoader: React.FC<{ children: React.ReactNode }> = ({ children }) => {

@@ -1,4 +1,4 @@
-import Loader from '@/components/Loader'
+import Loader from '@/components/public/Loader'
 import React from 'react'
 
 const page = () => {

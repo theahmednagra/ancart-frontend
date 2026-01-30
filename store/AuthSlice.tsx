@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export type User = {
     id: string;
-    fullName: string;
+    fullname: string;
     email: string;
     role: "admin" | "user";
 };
