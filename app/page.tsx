@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import Navbar from "@/components/public/Navbar";
 import CategoryBar from "@/components/public/CategoryBar";
-import SectionCard from "@/components/public/SectionCard";
+import ProductsListSection from "@/components/public/ProductsListSection";
 import api from "@/services/api";
 import { toast } from "sonner";
 import Footer from "@/components/public/Footer";
+import HeroSection from "@/components/public/HeroSection";
 
 const HomePage = () => {
   const [categories, setCategories] = useState<any[]>([]);
@@ -30,10 +31,10 @@ const HomePage = () => {
     <>
       <Navbar />
       <CategoryBar categories={categories} isLoading={loading} />
-
+      <HeroSection />
       <main className="max-w-7xl mx-auto px-4 py-10 space-y-16">
         {categories.map(category => (
-          <SectionCard key={category._id} category={category} />
+          <ProductsListSection key={category._id} category={category} showName={true} showViewAll={true} />
         ))}
       </main>
 
