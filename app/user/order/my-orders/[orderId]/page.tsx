@@ -7,8 +7,11 @@ import Navbar from "@/components/public/Navbar";
 import Footer from "@/components/public/Footer";
 import { toast } from "sonner";
 import ConfirmationModal from "@/components/public/ConfirmationModal";
+import useAuthRedirect from "@/utils/useAuthRedirect";
 
 const OrderDetailPage = () => {
+    useAuthRedirect(); // Redirect unauthenticated users to signin page
+
     const { orderId } = useParams() as { orderId: string };
     const router = useRouter();
     const [order, setOrder] = useState<any>(null);
@@ -79,11 +82,25 @@ const OrderDetailPage = () => {
                 </div>
 
                 {/* Cancel */}
-                {order.status !== "cancelled" && (
+                {order.status !== "CANCELLED" && order.status !== "DELIVERED" && (
                     <button onClick={() => setShowCancelModal(true)} className="text-red-500 font-medium hover:underline">
                         Cancel Order
                     </button>
                 )}
+
+                {/* Status */}
+                <div className="border rounded-xl p-5">
+                    <h2 className="font-semibold mb-2">Current Status</h2>
+                    <p className={`text-gray-700 ${order.status === "CANCELLED" ? "text-red-500" : ""}`}>
+                        {order.status}
+                    </p>
+                    {order.status === "CANCELLED" && order.cancelReason && (
+                        <>
+                            <p className="text-gray-700">Cancelled By: <strong>Ancart Admin</strong></p>
+                            <p className="text-gray-700">Cancellation Reason: {order.cancelReason}</p>
+                        </>
+                    )}
+                </div>
             </div>
 
             <ConfirmationModal

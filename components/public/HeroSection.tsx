@@ -2,8 +2,11 @@
 
 import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const HeroSection = () => {
+    const router = useRouter();
+
     return (
         <section className="py-20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col-reverse lg:flex-row items-center gap-12">
@@ -19,10 +22,16 @@ const HeroSection = () => {
                     </motion.p>
 
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.6 }} className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
-                        <button className="flex justify-center items-center gap-2 px-6 py-3 bg-[#02483D] text-white font-semibold rounded-lg shadow hover:scale-105 transition">
+                        <button
+                            onClick={() => router.push("/#")}
+                            className="flex justify-center items-center gap-2 px-6 py-3 bg-[#02483D] text-white font-semibold rounded-lg shadow hover:scale-105 transition"
+                        >
                             <ShoppingCart size={18} /> Shop Now
                         </button>
-                        <button className="px-6 py-3 border border-[#02483D] text-[#02483D] font-semibold rounded-lg hover:scale-105 transition">
+                        <button
+                            onClick={() => router.push("/#")}
+                            className="px-6 py-3 border border-[#02483D] text-[#02483D] font-semibold rounded-lg hover:scale-105 transition"
+                        >
                             Browse Categories
                         </button>
                     </motion.div>

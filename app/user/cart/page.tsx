@@ -8,13 +8,15 @@ import { Minus, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import useAuthRedirect from "@/utils/useAuthRedirect";
 
 const CartPage = () => {
+    useAuthRedirect(); // Redirect unauthenticated users to signin page
+    
     const router = useRouter();
     const [items, setItems] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [updatingId, setUpdatingId] = useState<string | null>(null);
-    const [cartItems, setCartItems] = useState<any[]>([]);
 
     const fetchCart = async () => {
         try {
@@ -58,8 +60,8 @@ const CartPage = () => {
         }
     };
 
-    const getCurrentQty = (productId: string) =>
-        items.find(i => i.product._id === productId)?.quantity || 1;
+    // const getCurrentQty = (productId: string) =>
+    //     items.find(i => i.product._id === productId)?.quantity || 1;
 
     const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
 

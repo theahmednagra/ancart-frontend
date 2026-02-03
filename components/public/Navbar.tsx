@@ -1,15 +1,25 @@
 "use client";
 
-import { Search, ShoppingCart, User } from "lucide-react";
+import { Search, ShoppingCart, User, LayoutDashboard } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import SearchDropdown from "./SearchDropdown";
 
 const Navbar = () => {
+  const [isAdmin, setIsAdmin] = useState(false);
+
   const router = useRouter();
 
   const user = useSelector((state: RootState) => state.auth.userData);
+
+  useEffect(() => {
+    if (user?.role === "ADMIN") {
+      setIsAdmin(true);
+    }
+  }, [user])
 
   return (
     <motion.header initial={{ y: -18, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.4 }} className="sticky top-0 z-50 bg-[#02483D]/90 backdrop-blur border-b border-gray-500">
@@ -21,26 +31,48 @@ const Navbar = () => {
           ancart
         </div>
 
-        <div className="hidden md:flex items-center gap-2 w-90 bg-gray-100 rounded-full px-4 py-2.5 focus-within:bg-white focus-within:ring focus-within:ring-gray-400 transition">
-          <Search className="w-4 h-4 text-gray-400" />
-          <input placeholder="Search products" className="bg-transparent outline-none text-sm w-full text-gray-700 placeholder:text-gray-400" />
+        <div className="flex items-center gap-4">
+          <SearchDropdown />
         </div>
 
         <div className="flex items-center gap-6">
-          <button className="relative">
-            <ShoppingCart className="w-6 h-6 text-white hover:text-gray-200 transition" />
-            <span className="absolute -top-1 -right-1 bg-white text-black text-[10px] w-4 h-4 rounded-full flex items-center justify-center">0</span>
-          </button>
 
           {!user ? (
-            <button className="font-medium text-white hover:text-gray-200 transition">
+            <button
+              onClick={() => router.push("/auth/signin")}
+              className="font-medium text-white hover:text-gray-200 transition"
+            >
               Login
             </button>
+
           ) : (
-            <button className="text-white hover:text-gray-200 transition">
-              <User className="w-6 h-6" />
-            </button>
+            <div className="flex items-center gap-6">
+              <button
+                onClick={() => router.push("/user/profile")}
+                className="text-white hover:text-gray-200 transition"
+              >
+                <User className="w-6 h-6" />
+              </button>
+
+              <button
+                onClick={() => router.push("/user/cart")}
+                className="relative"
+              >
+                <ShoppingCart className="w-6 h-6 text-white hover:text-gray-200 transition" />
+                {/* <span className="absolute -top-1 -right-1 bg-white text-black text-[10px] w-4 h-4 rounded-full flex items-center justify-center">0</span> */}
+              </button>
+
+              {isAdmin && (
+                <button
+                  onClick={() => router.push("/admin")}
+                  className="text-white hover:text-gray-200 transition"
+                >
+                  <LayoutDashboard className="w-6 h-6" />
+                </button>
+              )}
+            </div>
           )}
+
         </div>
       </div>
     </motion.header>

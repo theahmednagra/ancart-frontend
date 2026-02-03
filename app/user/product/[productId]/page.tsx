@@ -10,8 +10,10 @@ import { toast } from "sonner";
 import ProductsListSection from "@/components/public/ProductsListSection";
 import CategoryListSection from "@/components/public/CategoryListSection";
 import AddToCartButton from "@/components/public/AddToCartButton";
+import useAuthRedirect from "@/utils/useAuthRedirect";
 
 const ProductPage = () => {
+
     const { productId } = useParams() as { productId: string };
     const router = useRouter();
     const [product, setProduct] = useState<any>(null);

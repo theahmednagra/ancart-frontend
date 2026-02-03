@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import AddressForm from "@/components/public/AddressForm";
 import Navbar from "@/components/public/Navbar";
 import Footer from "@/components/public/Footer";
+import useAuthRedirect from "@/utils/useAuthRedirect";
 
 type CartItem = {
     quantity: number;
@@ -20,6 +21,8 @@ type CartItem = {
 };
 
 const CartCheckoutPage = () => {
+    useAuthRedirect(); // Redirect unauthenticated users to signin page
+
     const router = useRouter();
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [loading, setLoading] = useState(false);

@@ -2,23 +2,27 @@
 
 import AddProductForm from '@/components/admin/ProductForm';
 import ProductList from '@/components/admin/ProductList';
-import { ProductInput } from '@/schemas/admin/product.schema';
+import Footer from '@/components/admin/Footer';
+import Navbar from '@/components/admin/Navbar';
 import api from '@/services/api';
+import useAdminRedirect from '@/utils/useAdminRedirect';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { Product } from '@/types/product';
 
-const AddProjectPage = () => {
+const AddProductPage = () => {
+    // Redirect non-admin users
+    useAdminRedirect();
+
     const [isLoading, setIsLoading] = useState(false);
-    const [products, setProducts] = useState<ProductInput[]>([]);
+    const [products, setProducts] = useState<Product[]>([]);
 
     useEffect(() => {
         const fetchProducts = async () => {
             setIsLoading(true);
-
             try {
                 const res = await api.get("/admin/products/get-all-products");
-                setProducts(res.data.products);
-
+                setProducts(res.data.products || []);
             } catch (err) {
                 toast.error(err instanceof Error ? err.message : "Something went wrong");
             } finally {
@@ -29,36 +33,46 @@ const AddProjectPage = () => {
         fetchProducts();
     }, []);
 
-    const handleProductAdded = (newProduct: ProductInput) => {
+    const handleProductAdded = (newProduct: Product) => {
         setProducts(prev => [newProduct, ...prev]);
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 flex">
+        <>
+            <Navbar />
 
-            {/* Main Content */}
-            <main className="flex-1 p-2 space-y-10">
+            <div className="min-h-screen bg-zinc-900/99 text-white flex flex-col px-4 py-10">
 
-                {/* Forms Section */}
-                <section className="max-w-7xl mx-auto">
-                    <AddProductForm 
-                        onProductAdded={handleProductAdded}
-                    />
-                </section>
+                {/* Heading */}
+                {/* <section className="max-w-7xl w-full mx-auto">
+                    <h1 className="text-3xl font-bold mb-2 w-full">Add Product</h1>
+                </section> */}
 
-                {/* Lists Section */}
-                <section className="max-w-7xl mx-auto">
+                {/* Main Content */}
+                <main className="flex-1 space-y-10">
 
-                    <div className="">
-                        <h2 className="text-2xl font-semibold text-gray-900 mb-6">Products</h2>
+                    {/* Add Product Form */}
+                    <section className="max-w-7xl mx-auto">
+                        <AddProductForm onProductAdded={handleProductAdded} />
+                    </section>
+
+                    {/* Product List Section */}
+                    <section className="max-w-7xl mx-auto">
+                        <div className="mb-6">
+                            <h2 className="text-2xl font-semibold text-white">
+                                Products
+                            </h2>
+                        </div>
+
                         <ProductList products={products} isLoading={isLoading} />
-                    </div>
+                    </section>
 
-                </section>
+                </main>
+            </div>
 
-            </main>
-        </div>
+            <Footer />
+        </>
     );
 };
 
-export default AddProjectPage;
+export default AddProductPage;

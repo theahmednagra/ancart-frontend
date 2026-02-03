@@ -4,7 +4,8 @@ export type User = {
     id: string;
     fullname: string;
     email: string;
-    role: "admin" | "user";
+    role: "USER" | "ADMIN";
+    status: "UNVERIFIED" | "ACTIVE";
 };
 
 type AuthState = {

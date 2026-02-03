@@ -28,10 +28,24 @@ const AddToCartButton = ({ productId, stock }: Props) => {
         }
     };
 
+    const isOutOfStock = stock === 0 || loading;
+
     return (
-        <div className="flex items-center gap-4">
-            <input type="number" min={1} max={stock} value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} className="w-20 border rounded px-2 py-1" />
-            <button onClick={handleAddToCart} disabled={loading} className="bg-black text-white px-6 py-2 rounded disabled:opacity-50">
+        <div className="flex gap-2 w-full">
+            <input
+                type="number"
+                min={1}
+                max={stock}
+                value={quantity}
+                onChange={(e) => setQuantity(Number(e.target.value))}
+                disabled={isOutOfStock}
+                className={`w-15 text-center rounded-lg border border-gray-300 px-2 py-3 focus:outline-none disabled:bg-gray-100 disabled:text-gray-400`}
+            />
+            <button
+                onClick={handleAddToCart}
+                disabled={isOutOfStock}
+                className={`flex-1 py-3 w-30 px-4 rounded-lg font-medium transition-transform text-white ${isOutOfStock ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "bg-[#02483D] hover:scale-105 active:scale-95"}`}
+            >
                 {loading ? "Adding..." : "Add to Cart"}
             </button>
         </div>

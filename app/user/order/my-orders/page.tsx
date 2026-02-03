@@ -7,8 +7,11 @@ import Navbar from "@/components/public/Navbar";
 import Footer from "@/components/public/Footer";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
+import useAuthRedirect from "@/utils/useAuthRedirect";
 
 const MyOrdersPage = () => {
+    useAuthRedirect(); // Redirect unauthenticated users to signin page
+
     const router = useRouter();
     const [orders, setOrders] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -50,7 +53,15 @@ const MyOrdersPage = () => {
                                 <div className="space-y-1">
                                     <p className="font-semibold text-gray-900">Order #{order._id.slice(-6)}</p>
                                     <p className="text-sm text-gray-500">{new Date(order.createdAt).toLocaleDateString()}</p>
-                                    <p className="text-sm text-gray-600">{order.items.length} item(s)</p>
+
+                                    <div className="space-y-1 mt-2">
+                                        <h2 className="font-semibold text-gray-600">Item(s)</h2>
+                                        {order.items.map((item: any) => (
+                                            <div key={item._id} className="flex justify-between text-sm text-gray-600">
+                                                <span>{item.product.name} × {item.quantity}</span>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
 
                                 <div className="text-right space-y-1">

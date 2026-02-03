@@ -2,26 +2,29 @@
 
 import AddCategoryForm from '@/components/admin/CategoryForm';
 import CategoryList from '@/components/admin/CategoryList';
-import { CategoryInput } from '@/schemas/admin/category.schema';
+import Footer from '@/components/admin/Footer';
+import Navbar from '@/components/admin/Navbar';
 import api from '@/services/api';
+import { Category } from '@/types/category';
+import useAdminRedirect from '@/utils/useAdminRedirect';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 const AddCategoryPage = () => {
+    // Redirect non-admin users
+    useAdminRedirect();
+
     const [isLoading, setIsLoading] = useState(false);
-    const [categories, setCategories] = useState<CategoryInput[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
 
     useEffect(() => {
         const fetchCategories = async () => {
             setIsLoading(true);
-
             try {
                 const res = await api.get("/admin/categories/get-all-categories");
-                setCategories(res.data.categories);
-
+                setCategories(res.data.categories || []);
             } catch (err) {
                 toast.error(err instanceof Error ? err.message : "Something went wrong");
-
             } finally {
                 setIsLoading(false);
             }
@@ -30,35 +33,45 @@ const AddCategoryPage = () => {
         fetchCategories();
     }, []);
 
-    const handleCategoryAdded = (newCategory: CategoryInput) => {
+    const handleCategoryAdded = (newCategory: Category) => {
         setCategories(prev => [newCategory, ...prev]);
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 flex">
+        <>
+            <Navbar />
 
-            {/* Main Content */}
-            <main className="flex-1 p-2 space-y-10">
+            <div className="min-h-screen bg-zinc-900/99 text-white px-4 py-10 flex flex-col">
 
-                {/* Forms Section */}
-                <section className="max-w-7xl mx-auto">
-                    <AddCategoryForm
-                        onCategoryAdded={handleCategoryAdded}
-                    />
-                </section>
+                {/* Heading */}
+                {/* <section className="max-w-7xl w-full mx-auto">
+                    <h1 className="text-3xl font-bold mb-2 w-full">Add Category</h1>
+                </section> */}
 
-                {/* Lists Section */}
-                <section className="max-w-7xl mx-auto">
+                {/* Main Content */}
+                <main className="flex-1 space-y-10">
 
-                    <div>
-                        <h2 className="text-2xl font-semibold text-gray-900 mb-6">Categories</h2>
+                    {/* Add Category Form */}
+                    <section className="max-w-7xl mx-auto">
+                        <AddCategoryForm onCategoryAdded={handleCategoryAdded} />
+                    </section>
+
+                    {/* Category List Section */}
+                    <section className="max-w-7xl mx-auto">
+                        <div className="mb-6">
+                            <h2 className="text-2xl font-semibold text-white">
+                                Categories
+                            </h2>
+                        </div>
+
                         <CategoryList categories={categories} isLoading={isLoading} />
-                    </div>
+                    </section>
 
-                </section>
+                </main>
+            </div>
 
-            </main>
-        </div>
+            <Footer />
+        </>
     );
 };
 

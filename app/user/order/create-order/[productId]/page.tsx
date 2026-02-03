@@ -9,9 +9,12 @@ import Footer from "@/components/public/Footer";
 import { toast } from "sonner";
 import { DeliveryAddressInput } from "@/schemas/user/address.schema";
 import AddressForm from "@/components/public/AddressForm";
+import useAuthRedirect from "@/utils/useAuthRedirect";
 
 
 const OrderPage = () => {
+    useAuthRedirect(); // Redirect unauthenticated users to signin page
+
     const { productId } = useParams() as { productId: string };
     const router = useRouter();
 
@@ -66,7 +69,7 @@ const OrderPage = () => {
     return (
         <>
             <Navbar />
-            <div className="max-w-4xl mx-auto px-4 py-10 space-y-10">
+            <div className="max-w-7xl mx-auto px-4 py-10 space-y-10">
 
                 {/* Product Info */}
                 <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }} className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
@@ -99,7 +102,7 @@ const OrderPage = () => {
                 </motion.div>
 
                 {/* Delivery Address Form */}
-                <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }} className="bg-white border border-gray-200 rounded-xl p-6 shadow-md space-y-4">
+                <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }} className="max-w-3xl mx-auto bg-white border border-gray-200 rounded-xl p-6 shadow-md space-y-4">
                     <h2 className="text-2xl font-bold text-gray-900">Delivery Address</h2>
 
                     <AddressForm onSubmit={onSubmit} isSubmitting={submitting} />
