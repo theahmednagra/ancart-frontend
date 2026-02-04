@@ -62,7 +62,7 @@ const CartCheckoutPage = () => {
             {!cartItems.length ? (
                 <div className="max-w-6xl py-10 mx-auto min-h-screen">
                     <h1 className="text-3xl font-bold text-[#02483D] mb-8">Order summary</h1>
-                    <p className="text-center mt-20 text-gray-500">Your cart is empty</p>
+                    <p className="text-center mt-20 font-medium text-gray-500">Your cart is empty</p>
                 </div>
 
             ) : (

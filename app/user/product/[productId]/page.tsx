@@ -79,24 +79,25 @@ const ProductPage = () => {
                         <p className="text-gray-700 leading-relaxed whitespace-pre-line">{product.description}</p>
 
                         {/* ACTIONS */}
-                        <div className="flex flex-col sm:flex-row gap-4 w-full max-w-xs">
-                            <AddToCartButton productId={product._id} stock={product.stock} />
-                            {/* <button
-                                disabled={isOutOfStock}
-                                onClick={() => toast("Added to cart (future feature)")}
-                                className={`w-full py-3 px-4 rounded-lg font-medium transition-transform ${isOutOfStock ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "bg-[#02483D] text-white hover:scale-105"}`}
-                            >
-                                Add to Cart
-                            </button> */}
+                        <div className="flex flex-col sm:flex-row gap-4 w-full max-w-2xl items-stretch">
+                            {/* Add to Cart */}
+                            <div className="flex-1">
+                                <AddToCartButton productId={product._id} stock={product.stock} />
+                            </div>
 
+                            {/* Order Now */}
                             <button
                                 disabled={isOutOfStock || placingOrder}
                                 onClick={handleOrderNow}
-                                className={`w-full py-3 px-4 rounded-lg font-medium transition-transform border ${isOutOfStock ? "border-gray-300 text-gray-400 cursor-not-allowed" : "border-[#02483D] text-[#02483D] hover:scale-105"}`}
+                                className={`flex-1 py-3 px-5 rounded-lg font-medium transition-transform border text-center ${isOutOfStock
+                                        ? "border-gray-300 text-gray-400 cursor-not-allowed"
+                                        : "border-[#02483D] text-[#02483D] hover:scale-105 hover:shadow-sm"
+                                    }`}
                             >
                                 {placingOrder ? "Loading..." : "Order Now"}
                             </button>
                         </div>
+
                     </div>
 
                 </motion.div>

@@ -1,29 +1,44 @@
 "use client";
 
-import { Search, ShoppingCart, User, LayoutDashboard } from "lucide-react";
+import { ShoppingCart, User, LayoutDashboard, Search } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import SearchDropdown from "./SearchDropdown";
+import MobileSearch from "./MobileSearchDropdown";
 
 const Navbar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
-
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
 
   const user = useSelector((state: RootState) => state.auth.userData);
 
   useEffect(() => {
-    if (user?.role === "ADMIN") {
-      setIsAdmin(true);
-    }
-  }, [user])
+    if (user?.role === "ADMIN") setIsAdmin(true);
+  }, [user]);
+
+  /**
+   * Pages where search bar should be visible
+   */
+  const showSearchBar =
+    pathname === "/" ||
+    pathname.startsWith("/user/product") ||
+    pathname.startsWith("/user/category");
 
   return (
-    <motion.header initial={{ y: -18, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.4 }} className="sticky top-0 z-50 bg-[#02483D]/90 backdrop-blur border-b border-gray-500">
+    <motion.header
+      initial={{ y: -18, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.4 }}
+      className="sticky top-0 z-50 bg-[#02483D]/90 backdrop-blur border-b border-gray-500"
+    >
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-6">
+
+        {/* Logo */}
         <div
           onClick={() => router.push("/")}
           className="text-2xl font-bold text-white tracking-tight cursor-pointer"
@@ -31,11 +46,25 @@ const Navbar = () => {
           ancart
         </div>
 
-        <div className="flex items-center gap-4">
-          <SearchDropdown />
-        </div>
+        {/* Desktop Search */}
+        {showSearchBar && (
+          <div className="flex-1 hidden md:flex justify-center">
+            <SearchDropdown />
+          </div>
+        )}
 
+        {/* Right Actions */}
         <div className="flex items-center gap-6">
+
+          {/* Mobile Search Button */}
+          {showSearchBar && (
+            <button
+              className="md:hidden text-white hover:text-gray-200 transition"
+              onClick={() => setShowMobileSearch(true)}
+            >
+              <Search className="w-6 h-6" />
+            </button>
+          )}
 
           {!user ? (
             <button
@@ -44,7 +73,6 @@ const Navbar = () => {
             >
               Login
             </button>
-
           ) : (
             <div className="flex items-center gap-6">
               <button
@@ -59,7 +87,6 @@ const Navbar = () => {
                 className="relative"
               >
                 <ShoppingCart className="w-6 h-6 text-white hover:text-gray-200 transition" />
-                {/* <span className="absolute -top-1 -right-1 bg-white text-black text-[10px] w-4 h-4 rounded-full flex items-center justify-center">0</span> */}
               </button>
 
               {isAdmin && (
@@ -72,9 +99,13 @@ const Navbar = () => {
               )}
             </div>
           )}
-
         </div>
       </div>
+
+      {/* Mobile Search Overlay */}
+      {showMobileSearch && (
+        <MobileSearch onClose={() => setShowMobileSearch(false)} />
+      )}
     </motion.header>
   );
 };

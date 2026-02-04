@@ -66,7 +66,7 @@ const SearchDropdown = () => {
 
     return (
         <div className="relative w-full max-w-md" ref={containerRef}>
-            <div className="hidden md:flex items-center gap-2 w-90 bg-gray-100 rounded-full px-4 py-2.5 focus-within:bg-white focus-within:ring focus-within:ring-gray-400 transition relative">
+            <div className="hidden md:flex w-full items-center gap-2 bg-gray-100 rounded-full px-4 py-2.5 focus-within:bg-white focus-within:ring focus-within:ring-gray-400 transition relative">
                 <Search className="w-4 h-4 text-gray-400" />
                 <input
                     type="text"

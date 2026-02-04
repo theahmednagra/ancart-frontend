@@ -12,7 +12,7 @@ import useAuthRedirect from "@/utils/useAuthRedirect";
 
 const CartPage = () => {
     useAuthRedirect(); // Redirect unauthenticated users to signin page
-    
+
     const router = useRouter();
     const [items, setItems] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -36,12 +36,22 @@ const CartPage = () => {
 
     const updateQuantity = async (productId: string, quantity: number, stock: number) => {
         if (quantity < 1 || quantity > stock) return;
+
+        // Optimistic UI update
+        setItems(prev =>
+            prev.map(item =>
+                item.product._id === productId ? { ...item, quantity } : item
+            )
+        );
+
         setUpdatingId(productId);
+
         try {
             await api.patch("/cart/update-quantity", { productId, quantity });
-            await fetchCart(); // refresh cart from backend
         } catch {
+            // Revert quantity if update fails
             toast.error("Failed to update quantity");
+            await fetchCart();
         } finally {
             setUpdatingId(null);
         }
@@ -60,9 +70,6 @@ const CartPage = () => {
         }
     };
 
-    // const getCurrentQty = (productId: string) =>
-    //     items.find(i => i.product._id === productId)?.quantity || 1;
-
     const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
 
     return (
@@ -76,7 +83,7 @@ const CartPage = () => {
                     <div className="flex justify-center py-20 text-gray-500">Loading cart...</div>
                 ) : items.length === 0 ? (
                     <div className="text-center py-20 space-y-4">
-                        <p className="text-gray-600 text-lg">Your cart is empty</p>
+                        <p className="text-gray-600 text-lg font-medium">Your cart is empty</p>
                         <button onClick={() => router.push("/")} className="px-6 py-3 bg-[#02483D] text-white rounded-lg font-medium hover:opacity-90 transition">
                             Continue Shopping
                         </button>

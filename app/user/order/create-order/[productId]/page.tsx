@@ -10,10 +10,26 @@ import { toast } from "sonner";
 import { DeliveryAddressInput } from "@/schemas/user/address.schema";
 import AddressForm from "@/components/public/AddressForm";
 import useAuthRedirect from "@/utils/useAuthRedirect";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { sendEmailToAdmin } from "@/utils/emailClient";
 
 
 const OrderPage = () => {
     useAuthRedirect(); // Redirect unauthenticated users to signin page
+
+    const userData = useSelector((state: RootState) => state.auth.userData);
+
+    // Data to send email to admin after order placement
+    const emailData = {
+        name: userData?.fullname as string,
+        email: userData?.email as string,
+        subject: "New Order Received – Ancart",
+        message: `A new order has been placed on Ancart.
+
+            You can review the order details by visiting the admin panel:
+            https://ancart.vercel.app/admin/order`
+    };
 
     const { productId } = useParams() as { productId: string };
     const router = useRouter();
@@ -49,13 +65,16 @@ const OrderPage = () => {
 
         setSubmitting(true);
         try {
-            const res = await api.post("/orders/create-order", {
+            await api.post("/orders/create-order", {
                 deliveryAddress: data,
                 items: [{ productId: product._id, quantity }],
             });
 
             toast.success("Order placed successfully!");
             router.push(`/user/order/my-orders`);
+
+            // Notify admin
+            await sendEmailToAdmin(emailData);
         } catch (err: any) {
             toast.error(err?.response?.data?.message || "Order failed");
         } finally {

@@ -32,7 +32,7 @@ const HomePage = () => {
       <Navbar />
       <CategoryBar categories={categories} isLoading={loading} />
       <HeroSection />
-      <main className="max-w-7xl mx-auto px-4 py-10 space-y-16">
+      <main id="categories-section" className="max-w-7xl mx-auto px-4 py-10 space-y-16">
         {categories.map(category => (
           <ProductsListSection key={category._id} category={category} showName={true} showViewAll={true} />
         ))}

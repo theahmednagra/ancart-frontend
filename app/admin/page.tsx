@@ -81,7 +81,7 @@ const Page = () => {
           </div>
 
           {/* FOOT NOTE */}
-          <div className="pt-6 mt-13 border-t border-zinc-800">
+          <div className="pt-6 mt-18 border-t border-zinc-800">
             <p className="text-sm text-gray-500 text-center">
               You are logged in as an administrator. All actions are audited.
             </p>
