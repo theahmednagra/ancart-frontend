@@ -18,7 +18,9 @@ const ProductCard = ({ product }: { product: any }) => {
 
             {/* Product Info */}
             <h3 className="text-sm font-semibold text-gray-900 leading-snug line-clamp-2">{product.name}</h3>
-            <p className="mt-2 text-base font-bold text-[#02483D]">Rs. {product.price}</p>
+            <p className="mt-2 text-base font-bold text-[#02483D]">
+                Rs. {Number(product.price || 0).toLocaleString()}
+            </p>
 
             {product.stock <= 5 && (
                 <p className="text-xs text-red-500 mt-1">Limited stock</p>

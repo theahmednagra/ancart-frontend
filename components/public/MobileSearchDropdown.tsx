@@ -119,7 +119,9 @@ const MobileSearch: React.FC<MobileSearchProps> = ({ onClose }) => {
                                                 <span className="text-sm font-medium text-gray-900">{product.name}</span>
                                                 <span className="text-xs text-gray-500">{product.category.name}</span>
                                             </div>
-                                            <span className="text-sm min-w-20 text-right font-semibold text-gray-800">Rs. {product.price}</span>
+                                            <span className="text-sm min-w-20 text-right font-semibold text-gray-800">
+                                                Rs. {Number(product.price || 0).toLocaleString()}
+                                            </span>
                                         </Link>
                                     ))
                                 )}

@@ -11,12 +11,12 @@ const faqs = [
     {
         question: "How do I place an order?",
         answer:
-            "You can place an order by browsing products, adding them to your cart, and completing checkout. Once payment is confirmed, your order will be processed immediately.",
+            "You can place an order by browsing products and adding them to your cart. Your order will be processed immediately, and payment will be collected securely when your items are delivered.",
     },
     {
         question: "What payment methods do you accept?",
         answer:
-            "We accept debit and credit cards, mobile wallets, and other locally supported digital payment methods. All payments are processed securely.",
+            "We currently accept Cash on Delivery (COD) as our only payment method. Please note that debit/credit cards, mobile wallets, and other digital payment options are not supported at this time.",
     },
     {
         question: "How long does delivery take?",

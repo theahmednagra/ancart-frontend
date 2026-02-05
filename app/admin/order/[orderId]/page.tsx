@@ -81,12 +81,12 @@ const OrderDetailPage = () => {
                         {order.items.map((item: any) => (
                             <div key={item._id} className="flex justify-between text-sm text-gray-300">
                                 <span>{item.name} × {item.quantity}</span>
-                                <span>Rs. {item.price}</span>
+                                <span>Rs. {Number(item.price).toLocaleString()}</span>
                             </div>
                         ))}
                         <div className="flex justify-between font-bold pt-3 border-t border-zinc-700 text-gray-100">
                             <span>Total</span>
-                            <span>Rs. {order.totalAmount}</span>
+                            <span>Rs. {Number(order.totalAmount).toLocaleString()}</span>
                         </div>
                     </div>
 
