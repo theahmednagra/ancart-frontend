@@ -35,7 +35,7 @@ const Footer = () => {
                     <ul className="space-y-1 text-white/60 text-sm">
                         <li className="cursor-pointer hover:text-white transition" onClick={() => router.push("/admin")}>Dashboard Overview</li>
                         <li className="cursor-pointer hover:text-white transition" onClick={() => router.push("/admin/profile")}>Admin Profile</li>
-                        <li className="cursor-pointer hover:text-white transition" onClick={() => router.push("/")}>Client Side</li>
+                        <li className="cursor-pointer hover:text-white transition" onClick={() => router.push("/")}>Client Layer</li>
                     </ul>
                 </div>
 
