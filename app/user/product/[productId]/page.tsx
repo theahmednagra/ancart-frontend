@@ -70,7 +70,9 @@ const ProductPage = () => {
                         <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
 
                         <div className="flex items-center gap-4">
-                            <span className="text-2xl font-bold text-[#02483D]">Rs. {product.price}</span>
+                            <span className="text-2xl font-bold text-[#02483D]">
+                                Rs. {Number(product.price || 0).toLocaleString()}
+                            </span>
                             <span className={`px-3 py-1.5 text-xs font-semibold rounded-full border ${!isOutOfStock ? "border-green-500 text-green-600" : "border-red-400 text-red-500"}`}>
                                 {!isOutOfStock ? "In Stock" : "Out of Stock"}
                             </span>
@@ -90,8 +92,8 @@ const ProductPage = () => {
                                 disabled={isOutOfStock || placingOrder}
                                 onClick={handleOrderNow}
                                 className={`flex-1 py-3 px-5 rounded-lg font-medium transition-transform border text-center ${isOutOfStock
-                                        ? "border-gray-300 text-gray-400 cursor-not-allowed"
-                                        : "border-[#02483D] text-[#02483D] hover:scale-105 hover:shadow-sm"
+                                    ? "border-gray-300 text-gray-400 cursor-not-allowed"
+                                    : "border-[#02483D] text-[#02483D] hover:scale-105 hover:shadow-sm"
                                     }`}
                             >
                                 {placingOrder ? "Loading..." : "Order Now"}

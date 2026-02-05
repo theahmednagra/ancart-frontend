@@ -65,7 +65,10 @@ const MyOrdersPage = () => {
                                 </div>
 
                                 <div className="text-center space-y-1">
-                                    <p className="font-bold text-[#02483D]">Rs. {order.totalAmount}</p>
+                                    <p className="font-bold text-[#02483D]">
+                                        Rs. {Number(order.totalAmount || 0).toLocaleString()}
+                                    </p>
+
                                     <span className={`text-xs px-3 py-1 rounded-full border ${order.status === "CANCELLED" ? "border-red-400 text-red-500" : order.status === "PENDING" ? "border-gray-800 text-gray-800" : "border-green-500 text-green-600"}`}>
                                         {order.status}
                                     </span>

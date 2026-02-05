@@ -74,7 +74,9 @@ const AdminProductPage = () => {
 								<h1 className="text-3xl font-bold text-white">{product.name}</h1>
 
 								<div className="flex items-center gap-4">
-									<span className="text-2xl font-bold text-green-400">Rs. {product.price}</span>
+									<span className="text-2xl font-bold text-green-400">
+										Rs. {Number(product.price).toLocaleString()}
+									</span>
 									<span className={`px-3 py-1.5 text-xs font-semibold rounded-full border ${!isOutOfStock ? "border-green-500 text-green-400" : "border-red-500 text-red-400"}`}>
 										{!isOutOfStock ? `${product.stock} in Stock` : "Out of Stock"}
 									</span>

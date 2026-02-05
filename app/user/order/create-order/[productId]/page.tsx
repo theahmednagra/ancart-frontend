@@ -103,7 +103,9 @@ const OrderPage = () => {
 
                     <div className="flex flex-col gap-6">
                         <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
-                        <p className="text-xl font-bold text-[#02483D]">Rs. {product.price}</p>
+                        <p className="text-xl font-bold text-[#02483D]">
+                            Rs. {Number(product.price).toLocaleString()}
+                        </p>
                         <p className="text-gray-700 leading-relaxed whitespace-pre-line">{product.description}</p>
 
                         <div className="flex items-center gap-4">
@@ -132,7 +134,9 @@ const OrderPage = () => {
                             <span className="text-gray-600">Available: {product.stock}</span>
                         </div>
 
-                        <div className="text-lg font-semibold">Total: Rs. {totalAmount}</div>
+                        <div className="text-lg font-semibold">
+                            Total: Rs. {Number(totalAmount || 0).toLocaleString()}
+                        </div>
                     </div>
                 </motion.div>
 

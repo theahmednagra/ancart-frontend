@@ -100,7 +100,9 @@ const CartPage = () => {
 
                                     <div className="flex-1 flex flex-col gap-2">
                                         <h3 className="font-semibold text-gray-900">{item.product.name}</h3>
-                                        <p className="text-sm text-gray-500">Rs. {item.product.price}</p>
+                                        <p className="text-sm text-gray-500">
+                                            Rs. {Number(item.product.price).toLocaleString()}
+                                        </p>
 
                                         {/* QUANTITY INPUT */}
                                         <div className="flex items-center gap-3 mt-2">
@@ -138,7 +140,9 @@ const CartPage = () => {
                                     </div>
 
                                     <div className="flex flex-col justify-between items-end">
-                                        <p className="font-semibold text-gray-900">Rs. {item.product.price * item.quantity}</p>
+                                        <p className="font-semibold text-gray-900">
+                                            Rs. {(Number(item.product.price) * Number(item.quantity)).toLocaleString()}
+                                        </p>
                                         <button
                                             disabled={updatingId === item.product._id}
                                             onClick={() => removeItem(item.product._id)}
@@ -157,12 +161,12 @@ const CartPage = () => {
 
                             <div className="flex justify-between text-gray-700">
                                 <span>Subtotal</span>
-                                <span>Rs. {subtotal}</span>
+                                <span>Rs. {Number(subtotal || 0).toLocaleString()}</span>
                             </div>
 
                             <div className="flex justify-between font-semibold text-lg text-gray-900">
                                 <span>Total</span>
-                                <span>Rs. {subtotal}</span>
+                                <span>Rs. {Number(subtotal || 0).toLocaleString()}</span>
                             </div>
 
                             <button

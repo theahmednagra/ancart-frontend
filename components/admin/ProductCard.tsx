@@ -23,7 +23,7 @@ const ProductCard = ({ product }: { product: any }) => {
 
                 <div className="mt-2 flex items-center justify-between">
                     <p className="text-sm font-semibold text-emerald-400">
-                        Rs. {product.price}
+                        Rs. {Number(product.price || 0).toLocaleString()}
                     </p>
 
                     <span className="text-xs text-white/50">
