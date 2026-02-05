@@ -96,11 +96,14 @@ const OrderDetailPage = () => {
                 </div>
 
                 {/* Cancel */}
-                {order.status !== "CANCELLED" && order.status !== "DELIVERED" && order.status !== "SHIPPED" && (
-                    <button onClick={() => setShowCancelModal(true)} className="text-red-500 font-medium hover:underline">
-                        Cancel Order
-                    </button>
-                )}
+                <div className="border rounded-xl p-5">
+                    <h2 className="font-semibold mb-4">Cancel Order</h2>
+                    {order.status !== "CANCELLED" && order.status !== "DELIVERED" && order.status !== "SHIPPED" && (
+                        <button onClick={() => setShowCancelModal(true)} className="px-4 py-2 w-full bg-red-500 text-white rounded-lg font-medium hover:opacity-90 transition">
+                            Cancel Order
+                        </button>
+                    )}
+                </div>
             </div>
 
             <ConfirmationModal

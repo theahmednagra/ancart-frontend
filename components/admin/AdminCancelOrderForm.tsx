@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import api from "@/services/api";
-import ConfirmationModal from "@/components/admin/ConfirmationModal";
+import ConfirmationModal from "@/components/admin/ConfirmCancellationModal";
 import { useState } from "react";
 
 const cancelSchema = z.object({
@@ -40,12 +40,15 @@ export default function AdminCancelOrderForm({ orderId, onCancel }: Props) {
 
     return (
         <>
-            <button
-                onClick={() => setShowModal(true)}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg font-medium hover:opacity-90 transition"
-            >
-                Cancel Order
-            </button>
+            <div className="border border-zinc-700 rounded-xl p-5 bg-zinc-800">
+                <h2 className="font-semibold text-white mb-4">Cancel Order</h2>
+                <button
+                    onClick={() => setShowModal(true)}
+                    className="px-4 py-2 w-full bg-red-500 text-white rounded-lg font-medium hover:opacity-90 transition"
+                >
+                    Cancel Order
+                </button>
+            </div>
 
             <ConfirmationModal
                 open={showModal}

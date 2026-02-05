@@ -113,7 +113,8 @@ const CartPage = () => {
                                             </button>
 
                                             <input
-                                                type="number"
+                                                readOnly
+                                                type="text"
                                                 min={1}
                                                 max={item.product.stock}
                                                 value={item.quantity}

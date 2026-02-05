@@ -13,6 +13,7 @@ import useAuthRedirect from "@/utils/useAuthRedirect";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { sendEmailToAdmin } from "@/utils/emailClient";
+import { Minus, Plus } from "lucide-react";
 
 
 const OrderPage = () => {
@@ -82,6 +83,8 @@ const OrderPage = () => {
         }
     };
 
+    const isOutOfStock = product?.stock === 0 || loading;
+
     if (loading) return <div className="min-h-screen flex items-center justify-center text-gray-500">Loading...</div>;
     if (!product) return <div className="min-h-screen flex items-center justify-center text-gray-500">Product not found</div>;
 
@@ -105,14 +108,27 @@ const OrderPage = () => {
 
                         <div className="flex items-center gap-4">
                             <label className="font-medium text-gray-800">Quantity:</label>
-                            <input
-                                type="number"
-                                min={1}
-                                max={product.stock}
-                                value={quantity}
-                                onChange={(e) => setQuantity(Number(e.target.value))}
-                                className="w-20 border border-gray-300 rounded-lg px-3 py-1 outline-none text-gray-700"
-                            />
+
+                            {/* Quantity controls */}
+                            <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden shadow-sm">
+                                <button
+                                    onClick={() => setQuantity((prev) => Math.max(prev - 1, 1))}
+                                    disabled={quantity === 1 || isOutOfStock}
+                                    className="px-3 py-2 bg-white disabled:opacity-40 disabled:cursor-not-allowed"
+                                >
+                                    <Minus size={18} className="text-gray-600" />
+                                </button>
+
+                                <span className="w-8 text-center text-gray-800 font-semibold">{quantity}</span>
+
+                                <button
+                                    onClick={() => setQuantity((prev) => Math.min(prev + 1, product.stock))}
+                                    disabled={quantity === product.stock || isOutOfStock}
+                                    className="px-3 py-2 bg-white disabled:opacity-40 disabled:cursor-not-allowed"
+                                >
+                                    <Plus size={18} className="text-gray-600" />
+                                </button>
+                            </div>
                             <span className="text-gray-600">Available: {product.stock}</span>
                         </div>
 

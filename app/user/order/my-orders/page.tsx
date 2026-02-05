@@ -48,7 +48,7 @@ const MyOrdersPage = () => {
                                 key={order._id}
                                 whileHover={{ scale: 1.01 }}
                                 onClick={() => router.push(`/user/order/my-orders/${order._id}`)}
-                                className="cursor-pointer border rounded-xl p-5 flex justify-between items-center hover:shadow-md transition"
+                                className="cursor-pointer border rounded-xl p-5 flex justify-between items-start hover:shadow-md transition"
                             >
                                 <div className="space-y-1">
                                     <p className="font-semibold text-gray-900">Order #{order._id.slice(-6)}</p>
@@ -64,9 +64,9 @@ const MyOrdersPage = () => {
                                     </div>
                                 </div>
 
-                                <div className="text-right space-y-1">
+                                <div className="text-center space-y-1">
                                     <p className="font-bold text-[#02483D]">Rs. {order.totalAmount}</p>
-                                    <span className={`text-xs px-3 py-1 rounded-full border ${order.status === "CANCELLED" ? "border-red-400 text-red-500" : "border-green-500 text-green-600"}`}>
+                                    <span className={`text-xs px-3 py-1 rounded-full border ${order.status === "CANCELLED" ? "border-red-400 text-red-500" : order.status === "PENDING" ? "border-gray-800 text-gray-800" : "border-green-500 text-green-600"}`}>
                                         {order.status}
                                     </span>
                                 </div>
