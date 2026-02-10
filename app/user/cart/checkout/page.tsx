@@ -9,6 +9,9 @@ import AddressForm from "@/components/public/AddressForm";
 import Navbar from "@/components/public/Navbar";
 import Footer from "@/components/public/Footer";
 import useAuthRedirect from "@/utils/useAuthRedirect";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { sendEmailToAdmin } from "@/utils/emailClient";
 
 type CartItem = {
     quantity: number;
@@ -22,6 +25,19 @@ type CartItem = {
 
 const CartCheckoutPage = () => {
     useAuthRedirect(); // Redirect unauthenticated users to signin page
+
+    const userData = useSelector((state: RootState) => state.auth.userData);
+
+    // Data to send email to admin after order placement
+    const emailData = {
+        name: userData?.fullname as string,
+        email: userData?.email as string,
+        subject: "New Order Received – Ancart",
+        message: `A new order has been placed on Ancart.
+
+            You can review the order details by visiting the admin panel:
+            https://ancart.vercel.app/admin/order`
+    };
 
     const router = useRouter();
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -48,6 +64,9 @@ const CartCheckoutPage = () => {
 
             toast.success("Order placed successfully");
             router.push("/user/order/my-orders");
+
+            // Notify admin
+            await sendEmailToAdmin(emailData);
         } catch (error: any) {
             toast.error(error?.response?.data?.message || "Failed to place order");
         } finally {
@@ -80,14 +99,14 @@ const CartCheckoutPage = () => {
                                         <p className="font-medium">{item.product.name}</p>
                                         <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
                                     </div>
-                                    <p className="font-semibold">Rs {item.product.price * item.quantity}</p>
+                                    <p className="font-semibold">Rs {Number(item.product.price * item.quantity).toLocaleString()}</p>
                                 </div>
                             ))}
                         </div>
 
                         <div className="mt-6 flex justify-between text-lg font-semibold border-t pt-4">
                             <span>Total</span>
-                            <span>Rs {totalAmount}</span>
+                            <span>Rs {Number(totalAmount).toLocaleString()}</span>
                         </div>
                     </div>
 

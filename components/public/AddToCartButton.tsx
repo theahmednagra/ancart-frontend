@@ -4,6 +4,8 @@ import { useState } from "react";
 import api from "@/services/api";
 import { toast } from "sonner";
 import { Plus, Minus } from "lucide-react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 type Props = {
   productId: string;
@@ -11,10 +13,14 @@ type Props = {
 };
 
 const AddToCartButton = ({ productId, stock }: Props) => {
+  const userData = useSelector((state: RootState) => state.auth.userData);
+
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
 
   const handleAddToCart = async () => {
+    if (!userData) return toast.info("You need to sign in to perform this action.");
+
     if (quantity < 1) return toast.error("Invalid quantity");
     if (quantity > stock) return toast.error("Quantity exceeds stock");
 
