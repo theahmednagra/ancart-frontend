@@ -4,8 +4,13 @@ import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
+import { toast } from "sonner";
 
 const HeroSection = () => {
+    const userData = useSelector((state: RootState) => state.auth.userData);
+
     const router = useRouter();
 
     // Scroll handler for Browse Categories with offset
@@ -34,7 +39,9 @@ const HeroSection = () => {
 
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.6 }} className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
                         <button
-                            onClick={() => router.push("/user/cart")}
+                            onClick={() => {
+                                userData ? router.push("/user/cart") : toast.info("You need to sign in to perform this action.")
+                            }}
                             className="flex justify-center items-center gap-2 px-6 py-3 bg-[#02483D] text-white font-semibold rounded-lg shadow hover:scale-105 transition"
                         >
                             <ShoppingCart size={18} /> Shop Now
