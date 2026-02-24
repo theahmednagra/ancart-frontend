@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { RootState } from "@/store/store";
@@ -38,14 +38,23 @@ const HeroSection = () => {
                     </motion.p>
 
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.6 }} className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
-                        <button
-                            onClick={() => {
-                                userData ? router.push("/user/cart") : toast.info("You need to sign in to perform this action.")
-                            }}
-                            className="flex justify-center items-center gap-2 px-6 py-3 bg-[#02483D] text-white font-semibold rounded-lg shadow hover:scale-105 transition"
-                        >
-                            <ShoppingCart size={18} /> Shop Now
-                        </button>
+                        {
+                            userData ? (
+                                <button
+                                    onClick={() => router.push("/user/cart")}
+                                    className="flex justify-center items-center gap-2 px-6 py-3 bg-[#02483D] text-white font-semibold rounded-lg shadow hover:scale-105 transition"
+                                >
+                                    <ShoppingCart size={18} /> Shop Now
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={() => router.push("/auth/signin")}
+                                    className="flex justify-center items-center gap-2 px-8 py-3 bg-[#02483D] text-white font-semibold rounded-lg shadow hover:scale-105 transition"
+                                >
+                                    <User size={18} /> Sign In
+                                </button>
+                            )
+                        }
                         <button
                             onClick={scrollToCategories} // Updated scroll handler
                             className="px-6 py-3 border border-[#02483D] text-[#02483D] font-semibold rounded-lg hover:scale-105 transition"

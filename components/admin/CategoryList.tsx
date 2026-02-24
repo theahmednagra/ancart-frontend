@@ -10,15 +10,7 @@ type Props = {
 };
 
 const CategoryList = ({ categories, isLoading }: Props) => {
-  if (isLoading) {
-    return (
-      <div className="py-20 flex flex-wrap justify-center gap-6">
-        {[...Array(6)].map((_, i) => (
-          <div key={i} className="h-36 w-36 bg-zinc-900/70 border border-white/10 rounded-2xl animate-pulse" />
-        ))}
-      </div>
-    );
-  }
+  if (isLoading) return <div className="h-56 bg-neutral-800 rounded-2xl animate-pulse" />;
 
   if (categories.length === 0) {
     return <div className="text-center text-white/50 py-20">No categories available</div>;

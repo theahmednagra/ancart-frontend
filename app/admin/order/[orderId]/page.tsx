@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import useAuthRedirect from "@/utils/useAuthRedirect";
 import UpdateOrderStatusForm from "@/components/admin/UpdateOrderStatusForm";
 import AdminCancelOrderForm from "@/components/admin/AdminCancelOrderForm";
+import Loader from "@/components/admin/Loader";
 
 const OrderDetailPage = () => {
     useAuthRedirect(); // Redirect unauthenticated users
@@ -32,18 +33,7 @@ const OrderDetailPage = () => {
         fetchOrder();
     }, [orderId]);
 
-    console.log(order?.cancelledBy)
-
-    if (loading)
-        return (
-            <>
-                <Navbar />
-                <div className="min-h-screen flex items-center justify-center text-gray-400 bg-zinc-900">
-                    Loading...
-                </div>
-                <Footer />
-            </>
-        );
+    if (loading) return <Loader />;
 
     if (!order)
         return (
@@ -78,12 +68,26 @@ const OrderDetailPage = () => {
                     {/* Items */}
                     <div className="border border-zinc-700 rounded-xl p-5 space-y-4 bg-zinc-800">
                         <h2 className="font-semibold text-white">Items</h2>
+
                         {order.items.map((item: any) => (
-                            <div key={item._id} className="flex justify-between text-sm text-gray-300">
-                                <span>{item.name} × {item.quantity}</span>
+                            <div key={item._id} className="flex justify-between items-center text-sm text-gray-300">
+                                <div className="flex items-center space-x-2">
+                                    {/* Product Image */}
+                                    <img
+                                        src={item.product?.image || "/placeholder.png"}
+                                        alt={item.product?.name || item.name}
+                                        className="w-12 h-12 rounded object-cover shrink-0"
+                                    />
+                                    {/* Product Name × Quantity */}
+                                    <span>
+                                        {item.product?.name || item.name} × {item.quantity}
+                                    </span>
+                                </div>
+                                {/* Price */}
                                 <span>Rs. {Number(item.price).toLocaleString()}</span>
                             </div>
                         ))}
+
                         <div className="flex justify-between font-bold pt-3 border-t border-zinc-700 text-gray-100">
                             <span>Total</span>
                             <span>Rs. {Number(order.totalAmount).toLocaleString()}</span>
@@ -98,8 +102,8 @@ const OrderDetailPage = () => {
                         </p>
                         {order.status === "CANCELLED" && order.cancelReason && (
                             <>
-                            <p className="text-gray-300">Cancelled By: <strong>{order?.cancelledBy?.email}</strong></p>
-                            <p className="text-gray-300">Cancellation Reason: {order.cancelReason}</p>
+                                <p className="text-gray-300">Cancelled By: <strong>{order?.cancelledBy?.email}</strong></p>
+                                <p className="text-gray-300">Cancellation Reason: {order.cancelReason}</p>
                             </>
                         )}
                     </div>

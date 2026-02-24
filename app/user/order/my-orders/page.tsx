@@ -8,6 +8,7 @@ import Footer from "@/components/public/Footer";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import useAuthRedirect from "@/utils/useAuthRedirect";
+import Loader from "@/components/public/Loader";
 
 const MyOrdersPage = () => {
     useAuthRedirect(); // Redirect unauthenticated users to signin page
@@ -30,7 +31,7 @@ const MyOrdersPage = () => {
         fetchOrders();
     }, []);
 
-    if (loading) return <div className="min-h-screen flex items-center justify-center text-gray-500">Loading orders...</div>;
+    if (loading) return <Loader />
 
     return (
         <>
@@ -57,19 +58,28 @@ const MyOrdersPage = () => {
                                     <div className="space-y-1 mt-2">
                                         <h2 className="font-semibold text-gray-600">Item(s)</h2>
                                         {order.items.map((item: any) => (
-                                            <div key={item._id} className="flex justify-between text-sm text-gray-600">
-                                                <span>{item.product.name} × {item.quantity}</span>
+                                            <div key={item._id} className="flex justify-between text-sm text-gray-600 items-center">
+                                                <div className="flex items-center space-x-2">
+                                                    {/* Product Image */}
+                                                    <img
+                                                        src={item.product.image}
+                                                        alt={item.product.name}
+                                                        className="w-12 h-12 rounded object-cover shrink-0"
+                                                    />
+                                                    {/* Product Name & Quantity */}
+                                                    <span>
+                                                        {item.product.name}
+                                                        <span className="font-semibold ml-0.5">× {item.quantity}</span>
+                                                    </span>
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
 
-                                <div className="text-center space-y-1">
-                                    <p className="font-bold text-[#02483D]">
-                                        Rs. {Number(order.totalAmount || 0).toLocaleString()}
-                                    </p>
-
-                                    <span className={`text-xs px-3 py-1 rounded-full border ${order.status === "CANCELLED" ? "border-red-400 text-red-500" : order.status === "PENDING" ? "border-gray-800 text-gray-800" : "border-green-500 text-green-600"}`}>
+                                <div className="space-y-2 shrink-0 text-right">
+                                    <p className="font-bold text-[#02483D]">Rs. {Number(order.totalAmount || 0).toLocaleString()}</p>
+                                    <span className={`text-xs px-3 py-1 rounded-full border font-semibold ${order.status === "CANCELLED" ? "border-red-400 text-red-500" : order.status === "PENDING" ? "border-gray-800 text-gray-800" : "border-green-500 text-green-600"} `}>
                                         {order.status}
                                     </span>
                                 </div>

@@ -10,6 +10,7 @@ import useAdminRedirect from "@/utils/useAdminRedirect";
 import Navbar from "@/components/admin/Navbar";
 import Footer from "@/components/admin/Footer";
 import { Product } from "@/types/product";
+import Loader from "@/components/admin/Loader";
 
 const AdminCategoryPage = () => {
     // Redirect non-admin users
@@ -47,6 +48,8 @@ const AdminCategoryPage = () => {
         setCategory(updatedCategory);
     };
 
+    if (isLoading) return <Loader />;
+
     return (
         <>
             <Navbar />
@@ -54,11 +57,7 @@ const AdminCategoryPage = () => {
             <div className="min-h-screen w-full bg-zinc-900/99 text-white py-10 px-4 sm:px-6 lg:px-8">
                 <div className="h-full max-w-7xl mx-auto space-y-12">
 
-                    {isLoading ? (
-                        <div className="text-gray-400 text-center py-20 text-lg font-medium">
-                            Loading category...
-                        </div>
-                    ) : category ? (
+                    {category ? (
                         <div className="space-y-12">
 
                             {/* Heading */}
@@ -91,7 +90,7 @@ const AdminCategoryPage = () => {
                                 </div>
 
                                 {/* Update Category Form */}
-                                    <div className="w-full">
+                                <div className="w-full">
                                     <UpdateCategoryForm
                                         categoryId={categoryId}
                                         onUpdate={handleCategoryUpdate}

@@ -16,7 +16,7 @@ const ProductList = ({ products, isLoading = false }: Props) => {
     const handleClick = (productId: string) => router.push(`/admin/product/${productId}`);
 
     if (isLoading) {
-        return <div className="text-gray-400 text-center py-12">Loading products...</div>;
+        return <div className="h-56 bg-neutral-800 rounded-2xl animate-pulse" />;
     }
 
     if (!products.length) {

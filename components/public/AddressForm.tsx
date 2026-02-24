@@ -22,12 +22,12 @@ const AddressForm = ({ onSubmit, isSubmitting }: { onSubmit: (data: DeliveryAddr
       </div>
 
       <div>
-        <input {...register("addressLine")} placeholder="Address" className="w-full border rounded-lg px-4 py-3 outline-none focus:ring focus:ring-gray-300" />
+        <input {...register("addressLine")} placeholder="Address Line 1" className="w-full border rounded-lg px-4 py-3 outline-none focus:ring focus:ring-gray-300" />
         {errors.addressLine && <p className="text-sm text-red-500 mt-1">{errors.addressLine.message}</p>}
       </div>
 
       <div>
-        <input {...register("city")} placeholder="City" className="w-full border rounded-lg px-4 py-3 outline-none focus:ring focus:ring-gray-300" />
+        <input {...register("city")} placeholder="Address Line 2" className="w-full border rounded-lg px-4 py-3 outline-none focus:ring focus:ring-gray-300" />
         {errors.city && <p className="text-sm text-red-500 mt-1">{errors.city.message}</p>}
       </div>
 

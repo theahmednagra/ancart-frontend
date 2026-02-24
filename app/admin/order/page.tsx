@@ -8,8 +8,9 @@ import Footer from "@/components/admin/Footer";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import useAuthRedirect from "@/utils/useAuthRedirect";
+import Loader from "@/components/admin/Loader";
 
-const MyOrdersPage = () => {
+const OrdersPage = () => {
     useAuthRedirect(); // Redirect unauthenticated users
 
     const router = useRouter();
@@ -30,17 +31,7 @@ const MyOrdersPage = () => {
         fetchOrders();
     }, []);
 
-    if (loading) {
-        return (
-            <>
-                <Navbar />
-                <div className="min-h-[calc(100vh-64px)] flex items-center justify-center text-gray-400 bg-zinc-900">
-                    Loading orders...
-                </div>
-                <Footer />
-            </>
-        );
-    }
+    if (loading) return <Loader />;
 
     return (
         <>
@@ -69,15 +60,27 @@ const MyOrdersPage = () => {
                                         <div className="space-y-1 mt-2">
                                             <h2 className="font-semibold text-gray-200">Item(s)</h2>
                                             {order.items.map((item: any) => (
-                                                <div key={item._id} className="flex justify-between text-sm text-gray-300">
-                                                    <span>{item.product.name} × {item.quantity}</span>
+                                                <div key={item._id} className="flex justify-between text-sm text-gray-300 items-center">
+                                                    <div className="flex items-center space-x-2">
+                                                        {/* Product Image */}
+                                                        <img
+                                                            src={item.product.image || "/placeholder.png"}
+                                                            alt={item.product.name}
+                                                            className="w-12 h-12 rounded object-cover shrink-0"
+                                                        />
+                                                        {/* Product Name & Quantity */}
+                                                        <span>
+                                                            {item.product.name}
+                                                            <span className="font-semibold ml-0.5">× {item.quantity}</span>
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             ))}
                                         </div>
                                     </div>
 
                                     {/* Right info */}
-                                    <div className="text-center space-y-2 shrink-0">
+                                    <div className="text-right space-y-2 shrink-0">
                                         <p className="font-bold text-white">Rs. {Number(order.totalAmount || 0).toLocaleString()}</p>
                                         <span className={`text-xs px-3 py-1 rounded-full border font-semibold ${order.status === "CANCELLED" ? "border-red-500 text-red-400" : order.status === "PENDING" ? "border-gray-200 text-gray-200" : "border-green-500 text-green-400"} `}>
                                             {order.status}
@@ -95,4 +98,4 @@ const MyOrdersPage = () => {
     );
 };
 
-export default MyOrdersPage;
+export default OrdersPage;

@@ -56,7 +56,6 @@ export default function AdminCancelOrderForm({ orderId, onCancel }: Props) {
                 description={
                     <form onSubmit={handleSubmit(submitHandler)} className="space-y-3">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Reason</label>
                             <textarea
                                 {...register("reason")}
                                 rows={3}
@@ -74,7 +73,7 @@ export default function AdminCancelOrderForm({ orderId, onCancel }: Props) {
                                 disabled={isSubmitting}
                                 className="w-4 h-4"
                             />
-                            <span className="text-sm text-gray-700">Restore stock for this order</span>
+                            <span className="text-sm text-gray-500">Restore stock for this order</span>
                         </div>
 
                         <button

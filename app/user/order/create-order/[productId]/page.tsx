@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { sendEmailToAdmin } from "@/utils/emailClient";
 import { Minus, Plus } from "lucide-react";
+import Loader from "@/components/public/Loader";
 
 
 const OrderPage = () => {
@@ -85,7 +86,7 @@ const OrderPage = () => {
 
     const isOutOfStock = product?.stock === 0 || loading;
 
-    if (loading) return <div className="min-h-screen flex items-center justify-center text-gray-500">Loading...</div>;
+    if (loading) return <Loader />
     if (!product) return <div className="min-h-screen flex items-center justify-center text-gray-500">Product not found</div>;
 
     return (
