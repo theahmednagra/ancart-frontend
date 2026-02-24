@@ -9,6 +9,7 @@ import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
+import Loader from '@/components/admin/Loader';
 
 const AdminProductPage = () => {
 	// Redirect non-admin users
@@ -42,6 +43,8 @@ const AdminProductPage = () => {
 
 	const isOutOfStock = Number(product?.stock) === 0;
 
+	if (isLoading) return <Loader />;
+
 	return (
 		<>
 			<Navbar />
@@ -52,9 +55,7 @@ const AdminProductPage = () => {
 					{/* Heading */}
 					{/* <h1 className="text-3xl font-bold mb-10">Update Product</h1> */}
 
-					{isLoading ? (
-						<div className="text-gray-400 text-center py-20 text-lg font-medium">Loading product...</div>
-					) : product ? (
+					{product ? (
 						<motion.div
 							initial={{ opacity: 0, y: 24 }}
 							animate={{ opacity: 1, y: 0 }}

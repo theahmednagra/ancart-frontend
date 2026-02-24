@@ -12,6 +12,7 @@ import useAuthRedirect from "@/utils/useAuthRedirect";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { sendEmailToAdmin } from "@/utils/emailClient";
+import Loader from "@/components/public/Loader";
 
 type CartItem = {
     quantity: number;
@@ -42,12 +43,13 @@ const CartCheckoutPage = () => {
     const router = useRouter();
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [loading, setLoading] = useState(false);
+    const [cartItemsLoading, setCartItemsLoading] = useState(true);
 
     useEffect(() => {
         const fetchCart = async () => {
             const res = await api.get("/cart/get-cart");
-            console.log(res)
             setCartItems(res.data.data.items);
+            setCartItemsLoading(false);
         };
         fetchCart();
     }, []);
@@ -74,11 +76,13 @@ const CartCheckoutPage = () => {
         }
     };
 
+    if (cartItemsLoading) return <Loader />;
+
     return (
         <div>
             <Navbar />
 
-            {!cartItems.length ? (
+            {!cartItems?.length ? (
                 <div className="max-w-6xl py-10 mx-auto min-h-screen">
                     <h1 className="text-3xl font-bold text-[#02483D] mb-8">Order summary</h1>
                     <p className="text-center mt-20 font-medium text-gray-500">Your cart is empty</p>

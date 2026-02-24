@@ -11,6 +11,7 @@ import ProductsListSection from "@/components/public/ProductsListSection";
 import CategoryListSection from "@/components/public/CategoryListSection";
 import AddToCartButton from "@/components/public/AddToCartButton";
 import useAuthRedirect from "@/utils/useAuthRedirect";
+import Loader from "@/components/public/Loader";
 
 const ProductPage = () => {
 
@@ -46,7 +47,7 @@ const ProductPage = () => {
         router.push(`/user/order/create-order/${product._id}`);
     };
 
-    if (loading) return <div className="min-h-screen flex items-center justify-center text-gray-500">Loading...</div>;
+    if (loading) return <Loader />;
     if (!product) return <div className="min-h-screen flex items-center justify-center text-gray-500">Product not found</div>;
 
     return (
@@ -91,9 +92,9 @@ const ProductPage = () => {
                             <button
                                 disabled={isOutOfStock || placingOrder}
                                 onClick={handleOrderNow}
-                                className={`flex-1 py-3 px-5 rounded-lg font-medium transition-transform border text-center ${isOutOfStock
+                                className={`flex-1 py-3 px-5 rounded-lg font-medium transition-transform border text-center shadow-sm ${isOutOfStock
                                     ? "border-gray-300 text-gray-400 cursor-not-allowed"
-                                    : "border-[#02483D] text-[#02483D] hover:scale-105 hover:shadow-sm"
+                                    : "border-[#02483D] text-[#02483D] hover:scale-104"
                                     }`}
                             >
                                 {placingOrder ? "Loading..." : "Order Now"}

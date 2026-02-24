@@ -35,15 +35,15 @@ const AddToCartButton = ({ productId, stock }: Props) => {
     }
   };
 
-  const isOutOfStock = stock === 0 || loading;
+  const isOutOfStock = stock === 0;
 
   return (
-    <div className="flex gap-3 w-full">
+    <div className="flex gap-2 w-full border border-[#02483D] bg-[#02483D] rounded-lg shadow-sm overflow-hidden">
       {/* Quantity controls */}
-      <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden shadow-sm">
+      <div className="flex items-center bg-white rounded-lg overflow-hidden">
         <button
           onClick={() => setQuantity((prev) => Math.max(prev - 1, 1))}
-          disabled={quantity === 1 || isOutOfStock}
+          disabled={quantity === 1 || isOutOfStock || loading}
           className="px-3 py-2 bg-white disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <Minus size={18} className="text-gray-600" />
@@ -53,7 +53,7 @@ const AddToCartButton = ({ productId, stock }: Props) => {
 
         <button
           onClick={() => setQuantity((prev) => Math.min(prev + 1, stock))}
-          disabled={quantity === stock || isOutOfStock}
+          disabled={quantity === stock || isOutOfStock || loading}
           className="px-3 py-2 bg-white disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <Plus size={18} className="text-gray-600" />
@@ -63,8 +63,8 @@ const AddToCartButton = ({ productId, stock }: Props) => {
       {/* Add to Cart */}
       <button
         onClick={handleAddToCart}
-        disabled={isOutOfStock}
-        className={`flex-1 py-3 px-5 rounded-lg font-medium text-white shadow-md transition-transform ${isOutOfStock ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "bg-[#02483D] hover:scale-105 active:scale-95 hover:shadow-lg"}`}
+        disabled={isOutOfStock || loading}
+        className={`flex-1 py-3 px-5 rounded-lg font-medium text-white transition-transform ${isOutOfStock ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "bg-[#02483D] hover:scale-104"}`}
       >
         {loading ? "Adding..." : stock === 0 ? "Out of Stock" : "Add to Cart"}
       </button>

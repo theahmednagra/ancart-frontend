@@ -44,7 +44,8 @@ const SigninPage = () => {
             dispatch(setUser({ userData: res.data.user }));
             toast.success("Welcome back 👋");
 
-            router.replace("/");
+            res.data.user?.role === "ADMIN" ? router.push("/admin") : router.push("/");
+
         } catch (err: any) {
 
             if (err?.response?.status === 403 && err?.response?.data?.code === "NOT_VERIFIED") {
@@ -82,7 +83,7 @@ const SigninPage = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="w-full max-w-md rounded-2xl bg-white shadow-lg border border-neutral-200 p-8"
                 >
-                    <h2 className="text-2xl font-semibold text-neutral-900 mb-2">
+                    <h2 className="text-2xl font-bold text-[#02483D] mb-2">
                         Sign in
                     </h2>
                     <p className="text-sm text-neutral-500 mb-6">
@@ -120,7 +121,7 @@ const SigninPage = () => {
 
                         <button
                             disabled={isLoading}
-                            className="w-full rounded-lg bg-black py-3 text-sm font-medium text-white hover:opacity-90 transition disabled:opacity-50"
+                            className="w-full rounded-lg bg-[#02483D] py-3 text-sm font-medium text-white hover:opacity-90 transition disabled:opacity-50"
                         >
                             {isLoading ? "Signing in..." : "Sign in"}
                         </button>

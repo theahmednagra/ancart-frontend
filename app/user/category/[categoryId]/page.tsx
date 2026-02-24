@@ -8,6 +8,7 @@ import Footer from "@/components/public/Footer";
 import { toast } from "sonner";
 import ProductsListSection from "@/components/public/ProductsListSection";
 import CategoryListSection from "@/components/public/CategoryListSection";
+import Loader from "@/components/public/Loader";
 
 const CategoryPage = () => {
     const { categoryId } = useParams() as { categoryId: string };
@@ -33,7 +34,7 @@ const CategoryPage = () => {
         fetchCategoryData();
     }, [categoryId]);
 
-    if (loading) return <div className="min-h-screen flex items-center justify-center text-gray-500">Loading...</div>;
+    if (loading) return <Loader />;
     if (!category) return <div className="min-h-screen flex items-center justify-center text-gray-500">Category not found</div>;
 
     return (
@@ -45,8 +46,7 @@ const CategoryPage = () => {
                 <ProductsListSection category={category} showName={true} showViewAll={false} />
 
                 <div className="mt-10">
-                    <h2 className="text-2xl font-bold text-[#02483D] tracking-tight mb-6">Explore other categories</h2>
-                    <CategoryListSection />
+                    <CategoryListSection showHeading={true} />
                 </div>
             </main>
 

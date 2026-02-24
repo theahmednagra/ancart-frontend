@@ -8,6 +8,7 @@ import Footer from "@/components/public/Footer";
 import { toast } from "sonner";
 import ConfirmationModal from "@/components/public/ConfirmationModal";
 import useAuthRedirect from "@/utils/useAuthRedirect";
+import Loader from "@/components/public/Loader";
 
 const OrderDetailPage = () => {
     useAuthRedirect(); // Redirect unauthenticated users to signin page
@@ -48,7 +49,7 @@ const OrderDetailPage = () => {
         }
     };
 
-    if (loading) return <div className="min-h-screen flex items-center justify-center text-gray-500">Loading...</div>;
+    if (loading) return <Loader />;
     if (!order) return <div className="min-h-screen flex items-center justify-center text-gray-500">Order not found</div>;
 
     return (
@@ -69,12 +70,27 @@ const OrderDetailPage = () => {
                 {/* Items */}
                 <div className="border rounded-xl p-5 space-y-4">
                     <h2 className="font-semibold">Items</h2>
+
                     {order.items.map((item: any) => (
-                        <div key={item._id} className="flex justify-between text-sm">
-                            <span>{item.product.name} × {item.quantity}</span>
+                        <div key={item._id} className="flex justify-between items-center text-sm">
+                            <div className="flex items-center space-x-2">
+                                {/* Product Image */}
+                                <img
+                                    src={item.product.image || "/placeholder.png"}
+                                    alt={item.product.name}
+                                    className="w-12 h-12 rounded object-cover shrink-0"
+                                />
+                                {/* Product Name and Quantity */}
+                                <span>
+                                    {item.product.name} × {item.quantity}
+                                </span>
+                            </div>
+                            {/* Price */}
                             <span>Rs. {Number(item.price || 0).toLocaleString()}</span>
                         </div>
                     ))}
+
+                    {/* Total */}
                     <div className="flex justify-between font-bold pt-3 border-t">
                         <span>Total</span>
                         <span>Rs. {Number(order.totalAmount || 0).toLocaleString()}</span>

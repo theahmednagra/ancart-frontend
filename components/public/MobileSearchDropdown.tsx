@@ -115,10 +115,28 @@ const MobileSearch: React.FC<MobileSearchProps> = ({ onClose }) => {
                                             onClick={onClose}
                                             className="flex items-center justify-between px-4 py-3 hover:bg-gray-100 transition"
                                         >
-                                            <div className="flex flex-col">
-                                                <span className="text-sm font-medium text-gray-900">{product.name}</span>
-                                                <span className="text-xs text-gray-500">{product.category.name}</span>
+                                            {/* LEFT SIDE */}
+                                            <div className="flex items-center gap-3 min-w-0">
+
+                                                {/* Product Image */}
+                                                <img
+                                                    src={product.image || "/placeholder.png"}
+                                                    alt={product.name}
+                                                    className="w-10 h-10 rounded object-cover shrink-0"
+                                                />
+
+                                                {/* Name + Category */}
+                                                <div className="flex flex-col min-w-0">
+                                                    <span className="text-sm font-medium text-gray-900 truncate">
+                                                        {product.name}
+                                                    </span>
+                                                    <span className="text-xs text-gray-500 truncate">
+                                                        {product.category.name}
+                                                    </span>
+                                                </div>
                                             </div>
+
+                                            {/* PRICE */}
                                             <span className="text-sm min-w-20 text-right font-semibold text-gray-800">
                                                 Rs. {Number(product.price || 0).toLocaleString()}
                                             </span>

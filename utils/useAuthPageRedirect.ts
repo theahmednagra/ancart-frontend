@@ -7,11 +7,12 @@ import { RootState } from "@/store/store";
 
 /**
  * Redirect logged-in users away from auth pages
- * @param redirectPath Optional path to redirect (default: "/")
  */
-const useAuthPageRedirect = (redirectPath = "/") => {
+
+const useAuthPageRedirect = () => {
     const router = useRouter();
     const user = useSelector((state: RootState) => state.auth.userData);
+    const redirectPath = user?.role === "ADMIN" ? "/admin" : "/";
 
     useEffect(() => {
         if (user) {

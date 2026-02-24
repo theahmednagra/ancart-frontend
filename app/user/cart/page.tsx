@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import useAuthRedirect from "@/utils/useAuthRedirect";
+import Loader from "@/components/public/Loader";
 
 const CartPage = () => {
     useAuthRedirect(); // Redirect unauthenticated users to signin page
@@ -72,6 +73,8 @@ const CartPage = () => {
 
     const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
 
+    if (loading) return <Loader />;
+
     return (
         <>
             <Navbar />
@@ -79,9 +82,7 @@ const CartPage = () => {
             <div className="min-h-screen max-w-7xl mx-auto px-4 py-10">
                 <h1 className="text-3xl font-bold text-[#02483D] mb-8">Your Cart</h1>
 
-                {loading ? (
-                    <div className="flex justify-center py-20 text-gray-500">Loading cart...</div>
-                ) : items.length === 0 ? (
+                {items.length === 0 ? (
                     <div className="text-center py-20 space-y-4">
                         <p className="text-gray-600 text-lg font-medium">Your cart is empty</p>
                         <button onClick={() => router.push("/")} className="px-6 py-3 bg-[#02483D] text-white rounded-lg font-medium hover:opacity-90 transition">
