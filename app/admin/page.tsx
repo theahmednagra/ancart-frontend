@@ -32,7 +32,7 @@ const Page = () => {
             <h1 className="text-3xl font-bold text-white">
               Admin Dashboard
             </h1>
-            <p className="text-gray-400 max-w-xl">
+            <p className="text-gray-400 text-[17px] font-medium max-w-xl">
               Manage your store, monitor operations, and keep everything running smoothly from one place.
             </p>
           </motion.div>
@@ -54,7 +54,7 @@ const Page = () => {
               <h3 className="text-lg font-semibold text-white group-hover:text-emerald-400 transition">
                 Manage Products
               </h3>
-              <p className="text-sm text-gray-400 mt-1">
+              <p className="text-[15px] font-medium leadi text-gray-400 mt-1">
                 Add, update, activate or manage stock of products.
               </p>
             </motion.button>
@@ -73,7 +73,7 @@ const Page = () => {
               <h3 className="text-lg font-semibold text-white group-hover:text-emerald-400 transition">
                 Manage Categories
               </h3>
-              <p className="text-sm text-gray-400 mt-1">
+              <p className="text-[15px] font-medium text-gray-400 mt-1">
                 Organize products into categories for better browsing.
               </p>
             </motion.button>
@@ -92,26 +92,26 @@ const Page = () => {
               <h3 className="text-lg font-semibold text-white group-hover:text-emerald-400 transition">
                 Manage Orders
               </h3>
-              <p className="text-sm text-gray-400 mt-1">
+              <p className="text-[15px] font-medium leadi text-gray-400 mt-1">
                 View, update, cancel and track customer orders.
               </p>
             </motion.button>
 
           </div>
 
+
+        </motion.div>
           {/* FOOT NOTE */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.45 }}
-            className="pt-6 mt-18 border-t border-zinc-800"
+            className="py-6 mt-10 lg:mt-20 border-t md:border-b lg:border-b border-zinc-800"
           >
-            <p className="text-sm text-gray-500 text-center">
+            <p className="text-sm font-medium text-gray-500 text-center">
               You are logged in as an administrator. All actions are audited.
             </p>
           </motion.div>
-
-        </motion.div>
       </div>
 
       <Footer />

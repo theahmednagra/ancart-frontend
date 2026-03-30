@@ -21,20 +21,15 @@ const ProductCard = ({ product }: { product: any }) => {
                     {product.name}
                 </h3>
 
-                <div className="mt-2 flex items-center justify-between">
+                <div className="mt-2 flex items-center justify-between flex-wrap">
                     <p className="text-sm font-semibold text-emerald-400">
                         Rs. {Number(product.price || 0).toLocaleString()}
                     </p>
 
-                    <span className="text-xs text-white/50">
-                        Stock: {product.stock}
+                    <span className={`text-xs ${product.stock <= 5 ? "text-red-400" : "text-white/50"}`}>
+                        {product.stock} in stock
                     </span>
                 </div>
-                {product.stock <= 5 && (
-                    <p className="text-xs text-amber-400">
-                        Low inventory
-                    </p>
-                )}
             </div>
         </div>
     );

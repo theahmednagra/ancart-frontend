@@ -64,9 +64,9 @@ const AddToCartButton = ({ productId, stock }: Props) => {
       <button
         onClick={handleAddToCart}
         disabled={isOutOfStock || loading}
-        className={`flex-1 py-3 px-5 rounded-lg font-medium text-white transition-transform ${isOutOfStock ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "bg-[#02483D] hover:scale-104"}`}
+        className={`flex-1 py-3 px-5 rounded-lg font-medium text-white transition-transform ${isOutOfStock ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "bg-[#02483D] hover:scale-104 active:scale-96"}`}
       >
-        {loading ? "Adding..." : stock === 0 ? "Out of Stock" : "Add to Cart"}
+        {stock === 0 ? "Out of Stock" : "Add to Cart"}
       </button>
     </div>
   );

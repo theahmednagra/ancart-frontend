@@ -35,8 +35,8 @@ const Footer = () => {
                         Your premium online marketplace. Shop quality products across multiple categories with ease and style.
                     </p>
                     <div className="flex items-center gap-3 mt-2">
-                        <motion.a whileHover={{ scale: 1.1 }} target="blank" href="https://github.com/ahmednagradev"><Github className="w-5 h-5 hover:text-gray-200 transition" /></motion.a>
-                        <motion.a whileHover={{ scale: 1.1 }} target="blank" href="https://www.linkedin.com/in/muhammad-ahmed-808071291/"><Linkedin className="w-5 h-5 hover:text-gray-200 transition" /></motion.a>
+                        <motion.a whileHover={{ scale: 1.1 }} target="blank" href="https://github.com/theahmednagra"><Github className="w-5 h-5 hover:text-gray-200 transition" /></motion.a>
+                        <motion.a whileHover={{ scale: 1.1 }} target="blank" href="https://www.linkedin.com/in/theahmednagra/"><Linkedin className="w-5 h-5 hover:text-gray-200 transition" /></motion.a>
                         <motion.a whileHover={{ scale: 1.1 }} target="blank" href="https://www.instagram.com/theahmednagra"><Instagram className="w-5 h-5 hover:text-gray-200 transition" /></motion.a>
                     </div>
                 </div>
