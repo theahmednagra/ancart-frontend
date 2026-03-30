@@ -8,10 +8,10 @@ const ProductCard = ({ product }: { product: any }) => {
     return (
         <div
             onClick={() => router.push(`/user/product/${product._id}`)}
-            className="bg-white rounded-2xl border border-gray-200 p-4 hover:shadow-lg transition cursor-pointer relative h-min"
+            className="bg-white rounded-2xl border border-gray-200 p-4 hover:shadow-lg transition cursor-pointer relative"
         >
             {product.stock <= 5 && (
-                <div className="text-xs z-10 bg-gray-100 opacity-90 shadow px-1.5 py-0.5 rounded-full text-red-500 absolute right-2 top-2">Almost sold out</div>
+                <div className="text-xs z-10 shadow px-1.5 py-0.5 rounded-full text-neutral-600 bg-gray-50 opacity-90 absolute right-2 top-2">Almost sold out</div>
             )}
 
             {/* Product Image */}

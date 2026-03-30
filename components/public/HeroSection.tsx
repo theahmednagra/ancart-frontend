@@ -42,14 +42,14 @@ const HeroSection = () => {
                             userData ? (
                                 <button
                                     onClick={() => router.push("/user/cart")}
-                                    className="flex justify-center items-center gap-2 px-6 py-3 bg-[#02483D] text-white font-semibold rounded-lg shadow hover:scale-105 transition"
+                                    className="flex justify-center items-center gap-2 px-11 py-3 bg-[#02483D] text-white font-semibold rounded-lg shadow hover:scale-105 transition"
                                 >
                                     <ShoppingCart size={18} /> Shop Now
                                 </button>
                             ) : (
                                 <button
                                     onClick={() => router.push("/auth/signin")}
-                                    className="flex justify-center items-center gap-2 px-8 py-3 bg-[#02483D] text-white font-semibold rounded-lg shadow hover:scale-105 transition"
+                                    className="flex justify-center items-center gap-2 px-13 py-3 bg-[#02483D] text-white font-semibold rounded-lg shadow hover:scale-105 transition"
                                 >
                                     <User size={18} /> Sign In
                                 </button>
