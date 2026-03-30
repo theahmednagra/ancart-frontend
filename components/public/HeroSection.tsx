@@ -24,8 +24,8 @@ const HeroSection = () => {
     };
 
     return (
-        <section className="py-20">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col-reverse lg:flex-row items-center gap-12">
+        <section className="py-18 lg:py-20">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col-reverse lg:flex-row items-center gap-12">
 
                 {/* Left: Text Content */}
                 <div className="flex-1 space-y-4 text-center lg:text-left">
@@ -33,7 +33,7 @@ const HeroSection = () => {
                         Discover Your Next <span className="text-[#02483D]">Favorite Product</span>
                     </motion.h1>
 
-                    <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="text-gray-700 text-lg sm:text-xl font-medium max-w-md mx-auto lg:mx-0">
+                    <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="text-gray-700 text-lg sm:text-xl font-medium max-w-lg mx-auto lg:mx-0">
                         Shop from thousands of high-quality products across multiple categories. Premium quality meets unbeatable prices.
                     </motion.p>
 
@@ -65,7 +65,7 @@ const HeroSection = () => {
                 </div>
 
                 {/* Right: Hero Image */}
-                <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }} className="flex-1">
+                <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }} className="flex-1 lg:flex justify-center">
                     {/* Use next/image if the image is in public folder */}
                     <Image
                         src="/images/apple-devices.jpg"

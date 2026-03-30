@@ -15,6 +15,7 @@ const Navbar = () => {
     const pathname = usePathname();
 
     const user = useSelector((state: RootState) => state.auth.userData);
+    const authLoading = useSelector((state: RootState) => state.auth.authLoading);
 
     useEffect(() => {
         if (user?.role === "ADMIN") setIsAdmin(true);
@@ -38,7 +39,7 @@ const Navbar = () => {
                 <div className="flex items-center md:justify-start flex-1 md:flex-none">
                     <div
                         onClick={() => router.push("/")}
-                        className="text-2xl font-bold text-white tracking-tight cursor-pointer"
+                        className="text-2xl font-bold text-white cursor-pointer"
                     >
                         ancart
                     </div>
@@ -64,39 +65,43 @@ const Navbar = () => {
                         </button>
                     )}
 
-                    {!user ? (
-                        <button
-                            onClick={() => router.push("/auth/signin")}
-                            className="font-medium text-white hover:text-gray-200 transition"
-                        >
-                            Login
-                        </button>
-                    ) : (
+                    {!authLoading &&
                         <>
-                            <button
-                                onClick={() => router.push("/user/cart")}
-                                className="relative"
-                            >
-                                <ShoppingCart className="w-6 h-6 text-white hover:text-gray-200 transition" />
-                            </button>
-
-                            <button
-                                onClick={() => router.push("/user/profile")}
-                                className="text-white hover:text-gray-200 transition"
-                            >
-                                <User className="w-6 h-6" />
-                            </button>
-
-                            {isAdmin && (
+                            {!user ? (
                                 <button
-                                    onClick={() => router.push("/admin")}
-                                    className="text-white hover:text-gray-200 transition"
+                                    onClick={() => router.push("/auth/signin")}
+                                    className="font-medium text-white hover:text-gray-200 transition"
                                 >
-                                    <LayoutDashboard className="w-6 h-6" />
+                                    Login
                                 </button>
+                            ) : (
+                                <>
+                                    <button
+                                        onClick={() => router.push("/user/cart")}
+                                        className="relative"
+                                    >
+                                        <ShoppingCart className="w-6 h-6 text-white hover:text-gray-200 transition" />
+                                    </button>
+
+                                    <button
+                                        onClick={() => router.push("/user/profile")}
+                                        className="text-white hover:text-gray-200 transition"
+                                    >
+                                        <User className="w-6 h-6" />
+                                    </button>
+
+                                    {isAdmin && (
+                                        <button
+                                            onClick={() => router.push("/admin")}
+                                            className="text-white hover:text-gray-200 transition"
+                                        >
+                                            <LayoutDashboard className="w-6 h-6" />
+                                        </button>
+                                    )}
+                                </>
                             )}
                         </>
-                    )}
+                    }
                 </div>
             </div>
 
