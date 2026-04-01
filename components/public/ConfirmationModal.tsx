@@ -31,7 +31,7 @@ const ConfirmationModal = ({
   const isDark = mode === "dark";
 
   const confirmButtonClasses = clsx(
-    "px-4 py-2 text-sm font-medium rounded-lg transition disabled:opacity-60 disabled:cursor-not-allowed",
+    "px-4 py-2.5 text-sm font-medium rounded-lg transition disabled:opacity-60 disabled:cursor-not-allowed",
     variant === "primary" && [
       "bg-zinc-900 text-white hover:bg-zinc-800",
       isDark && "bg-white text-black hover:bg-gray-200",

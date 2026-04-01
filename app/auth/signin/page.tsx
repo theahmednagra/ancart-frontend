@@ -123,7 +123,7 @@ const SigninPage = () => {
                             disabled={isLoading}
                             className="w-full rounded-lg bg-[#02483D] py-3 text-sm font-medium text-white hover:opacity-90 transition disabled:opacity-50"
                         >
-                            {isLoading ? "Signing in..." : "Sign in"}
+                            {isLoading ? "Processing..." : "Sign in"}
                         </button>
                     </form>
 
