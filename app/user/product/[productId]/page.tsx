@@ -10,7 +10,6 @@ import { toast } from "sonner";
 import ProductsListSection from "@/components/public/ProductsListSection";
 import CategoryListSection from "@/components/public/CategoryListSection";
 import AddToCartButton from "@/components/public/AddToCartButton";
-import useAuthRedirect from "@/utils/useAuthRedirect";
 import Loader from "@/components/public/Loader";
 
 const ProductPage = () => {

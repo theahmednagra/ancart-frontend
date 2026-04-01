@@ -8,7 +8,7 @@ import ConfirmationModal from "./ConfirmationModal";
 import { useDispatch } from "react-redux";
 import { removeUser } from "@/store/AuthSlice";
 
-const LogoutButton = () => {
+const LogoutButton = ({ wide }: { wide?: boolean }) => {
     const router = useRouter();
     const dispatch = useDispatch();
     const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -33,7 +33,7 @@ const LogoutButton = () => {
         <>
             <button
                 onClick={() => setShowLogoutModal(true)}
-                className="px-6 py-3 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600 transition"
+                className={`px-6 py-3 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600/85 transition ${wide ? "w-full" : ""}`}
             >
                 Logout
             </button>
