@@ -19,13 +19,13 @@ const OrderDetailPage = () => {
     const [loading, setLoading] = useState(true);
     const [showCancelModal, setShowCancelModal] = useState(false);
     const [cancelling, setCancelling] = useState(false);
+    const [processing, setProcessing] = useState(false);
 
     useEffect(() => {
         const fetchOrder = async () => {
             try {
-                const res = await api.get("/orders/get-user-orders");
-                const found = res.data.data.find((o: any) => o._id === orderId);
-                setOrder(found);
+                const res = await api.get(`/orders/get-order/${orderId}`);
+                setOrder(res?.data?.data);
             } catch {
                 toast.error("Failed to load order");
             } finally {
@@ -49,6 +49,18 @@ const OrderDetailPage = () => {
         }
     };
 
+    const handlePayNow = async () => {
+        try {
+            setProcessing(true);
+            const res = await api.post(`/payment/create/${orderId}`);
+            const checkoutUrl = res.data.checkoutUrl;
+            checkoutUrl && window.location.replace(checkoutUrl);
+
+        } catch {
+            toast.error("Failed to create payment");
+        }
+    }
+
     if (loading) return <Loader />;
     if (!order) return <div className="min-h-screen flex items-center justify-center text-gray-500">Order not found</div>;
 
@@ -59,12 +71,13 @@ const OrderDetailPage = () => {
             <div className="min-h-screen max-w-5xl mx-auto px-4 py-10 space-y-8">
                 <h1 className="text-2xl font-bold text-[#02483D]">Order Details</h1>
 
-                {/* Address */}
+                {/* Order Data */}
                 <div className="border rounded-xl p-5">
-                    <h2 className="font-semibold mb-2">Delivery Address</h2>
-                    <p className="text-gray-600">{order.deliveryAddress.fullName}</p>
-                    <p className="text-gray-600">{order.deliveryAddress.phone}</p>
-                    <p className="text-gray-600">{order.deliveryAddress.addressLine}, {order.deliveryAddress.city}</p>
+                    <h2 className="font-semibold mb-2">Order Data</h2>
+                    <p className="text-gray-600">{order?.orderData?.fullName}</p>
+                    <p className="text-gray-600">{order?.orderData?.phone}</p>
+                    <p className="text-gray-600">{order?.orderData?.addressLine}, {order?.orderData?.city}</p>
+                    <p className="text-gray-600 text-sm font-medium mt-2">Payment Method: {order?.orderData.paymentMethod}</p>
                 </div>
 
                 {/* Items */}
@@ -101,6 +114,7 @@ const OrderDetailPage = () => {
                 <div className="border rounded-xl p-5">
                     <h2 className="font-semibold mb-2">Current Status</h2>
                     <p className={`text-gray-700 ${order.status === "CANCELLED" ? "text-red-500" : ""}`}>
+                        {/* {order.status} */}
                         {order.status}
                     </p>
                     {order.status === "CANCELLED" && order.cancelReason && (
@@ -111,11 +125,28 @@ const OrderDetailPage = () => {
                     )}
                 </div>
 
+                {/* Pay now */}
+                {order.status === "PAYMENT_PENDING" && (
+                    <div className="border rounded-xl p-5">
+                        <h2 className="font-semibold mb-4">Pay Now</h2>
+                        <button
+                            disabled={processing}
+                            onClick={handlePayNow}
+                            className="px-4 py-2 w-full bg-[#02483D] text-white rounded-lg font-medium hover:opacity-90 transition disabled:opacity-90"
+                        >
+                            {processing ? "Processing..." : "Pay Now"}
+                        </button>
+                    </div>
+                )}
+
                 {/* Cancel */}
-                {order.status !== "CANCELLED" && order.status !== "DELIVERED" && order.status !== "SHIPPED" && (
+                {order.status !== "PAID" && order.status !== "CANCELLED" && order.status !== "DELIVERED" && order.status !== "SHIPPED" && (
                     <div className="border rounded-xl p-5">
                         <h2 className="font-semibold mb-4">Cancel Order</h2>
-                        <button onClick={() => setShowCancelModal(true)} className="px-4 py-2 w-full bg-red-500 text-white rounded-lg font-medium hover:opacity-90 transition">
+                        <button
+                            onClick={() => setShowCancelModal(true)}
+                            className="px-4 py-2 w-full bg-red-500 text-white rounded-lg font-medium hover:opacity-90 transition"
+                        >
                             Cancel Order
                         </button>
                     </div>

@@ -22,6 +22,7 @@ const MyOrdersPage = () => {
             try {
                 const res = await api.get("/orders/get-user-orders");
                 setOrders(res.data.data);
+
             } catch {
                 toast.error("Failed to load orders");
             } finally {
@@ -37,7 +38,7 @@ const MyOrdersPage = () => {
         <>
             <Navbar />
 
-            <div className="min-h-screen max-w-6xl mx-auto px-4 py-10 space-y-6">
+            <div className="min-h-screen max-w-5xl mx-auto px-4 py-10 space-y-6">
                 <h1 className="text-3xl font-bold text-[#02483D]">My Orders</h1>
 
                 {orders.length === 0 ? (
@@ -47,12 +48,14 @@ const MyOrdersPage = () => {
                         {orders.map(order => (
                             <motion.div
                                 key={order._id}
-                                whileHover={{ scale: 1.01 }}
                                 onClick={() => router.push(`/user/order/my-orders/${order._id}`)}
-                                className="cursor-pointer border rounded-xl p-5 flex justify-between items-start hover:shadow-md transition"
+                                className="cursor-pointer border rounded-xl px-5 py-4 flex justify-between items-start hover:shadow-md transition"
                             >
                                 <div className="space-y-1">
-                                    <p className="font-semibold text-gray-900">Order #{order._id.slice(-6)}</p>
+                                    <div className="flex gap-3 items-center">
+                                        <p className="font-semibold text-gray-900">Order #{order._id.slice(-6)}</p>
+                                        <p className="font-semibold text-gray-600 text-sm">({order.orderData.paymentMethod})</p>
+                                    </div>
                                     <p className="text-sm text-gray-500">{new Date(order.createdAt).toLocaleDateString()}</p>
 
                                     <div className="space-y-1 mt-2">

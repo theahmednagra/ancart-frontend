@@ -11,7 +11,6 @@ import { toast } from 'sonner';
 import { Product } from '@/types/product';
 
 const AddProductPage = () => {
-    // Redirect non-admin users
     useAdminRedirect();
 
     const [isLoading, setIsLoading] = useState(false);

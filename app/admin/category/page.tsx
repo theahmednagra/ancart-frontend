@@ -7,11 +7,11 @@ import Navbar from '@/components/admin/Navbar';
 import api from '@/services/api';
 import { Category } from '@/types/category';
 import useAdminRedirect from '@/utils/useAdminRedirect';
+import useAuthRedirect from '@/utils/useAuthRedirect';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 const AddCategoryPage = () => {
-    // Redirect non-admin users
     useAdminRedirect();
 
     const [isLoading, setIsLoading] = useState(false);

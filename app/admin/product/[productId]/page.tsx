@@ -10,10 +10,10 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import Loader from '@/components/admin/Loader';
+import useAuthRedirect from '@/utils/useAuthRedirect';
 
 const AdminProductPage = () => {
-	// Redirect non-admin users
-	useAdminRedirect();
+    useAdminRedirect();
 
 	const params = useParams();
 	const productId = params.productId as string;

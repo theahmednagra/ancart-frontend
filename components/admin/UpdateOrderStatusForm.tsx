@@ -9,6 +9,8 @@ import { useState } from "react";
 import ConfirmationModal from "../public/ConfirmationModal";
 
 const STATUS_FLOW = {
+    PAYMENT_PENDING: [],
+    PAID: ["CONFIRMED"],
     PENDING: ["CONFIRMED"],
     CONFIRMED: ["SHIPPED"],
     SHIPPED: ["DELIVERED"],
@@ -16,7 +18,7 @@ const STATUS_FLOW = {
 } as const;
 
 const statusSchema = z.object({
-    status: z.enum(["PENDING", "CONFIRMED", "SHIPPED", "DELIVERED"]),
+    status: z.enum(["PAYMENT_PENDING", "PAID", "PENDING", "CONFIRMED", "SHIPPED", "DELIVERED"]),
 });
 
 type OrderStatus = z.infer<typeof statusSchema>["status"];
@@ -86,7 +88,7 @@ export default function UpdateOrderStatusForm({
                 {/* Action */}
                 {allowedNextStatuses.length === 0 ? (
                     <div className="text-sm text-zinc-500">
-                        This order can no longer be updated.
+                        This order can can not be updated.
                     </div>
                 ) : (
                     <button
