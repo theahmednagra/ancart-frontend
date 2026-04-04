@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import api from "@/services/api";
-import { DeliveryAddressInput } from "@/schemas/user/address.schema";
+import { OrderDataInput } from "@/schemas/user/order.schema";
 import { toast } from "sonner";
-import AddressForm from "@/components/public/AddressForm";
+import OrderForm from "@/components/public/OrderForm";
 import Navbar from "@/components/public/Navbar";
 import Footer from "@/components/public/Footer";
 import useAuthRedirect from "@/utils/useAuthRedirect";
@@ -56,16 +56,21 @@ const CartCheckoutPage = () => {
 
     const totalAmount = cartItems?.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
 
-    const handleCreateOrder = async (address: DeliveryAddressInput) => {
+    const handleCreateOrder = async (data: OrderDataInput) => {
+        setLoading(true);
         try {
-            setLoading(true);
-
-            await api.post("/orders/create-order-from-cart", {
-                deliveryAddress: address,
+            const response = await api.post("/orders/create-order-from-cart", {
+                orderData: data,
             });
 
-            toast.success("Order placed successfully");
-            router.push("/user/order/my-orders");
+            const res = response.data;
+            toast.success(res?.message);
+
+            if (res.checkoutUrl) {
+                window.location.href = res.checkoutUrl;
+            } else {
+                router.replace("/user/order/my-orders");
+            }
 
             // Notify admin
             await sendEmailToAdmin(emailData);
@@ -114,10 +119,10 @@ const CartCheckoutPage = () => {
                         </div>
                     </div>
 
-                    {/* Address Form */}
+                    {/* Order Form */}
                     <div>
                         <h2 className="text-xl font-semibold mb-5">Delivery Address</h2>
-                        <AddressForm onSubmit={handleCreateOrder} isSubmitting={loading} />
+                        <OrderForm onSubmit={handleCreateOrder} isSubmitting={loading} />
                     </div>
                 </div>
             )}

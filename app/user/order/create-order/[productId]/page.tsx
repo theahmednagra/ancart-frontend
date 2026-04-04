@@ -7,8 +7,8 @@ import api from "@/services/api";
 import Navbar from "@/components/public/Navbar";
 import Footer from "@/components/public/Footer";
 import { toast } from "sonner";
-import { DeliveryAddressInput } from "@/schemas/user/address.schema";
-import AddressForm from "@/components/public/AddressForm";
+import { OrderDataInput } from "@/schemas/user/order.schema";
+import OrderForm from "@/components/public/OrderForm";
 import useAuthRedirect from "@/utils/useAuthRedirect";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
@@ -59,7 +59,7 @@ const OrderPage = () => {
 
     const totalAmount = quantity * (product?.price || 0);
 
-    const onSubmit = async (data: DeliveryAddressInput) => {
+    const onSubmit = async (data: OrderDataInput) => {
         if (quantity < 1 || quantity > product.stock) {
             toast.error("Invalid quantity");
             return;
@@ -67,13 +67,19 @@ const OrderPage = () => {
 
         setSubmitting(true);
         try {
-            await api.post("/orders/create-order", {
-                deliveryAddress: data,
+            const response = await api.post("/orders/create-order", {
+                orderData: data,
                 items: [{ productId: product._id, quantity }],
             });
 
-            toast.success("Order placed successfully!");
-            router.push(`/user/order/my-orders`);
+            const res = response.data;
+            toast.success(res?.message);
+
+            if (res.checkoutUrl) {
+                window.location.href = res.checkoutUrl;
+            } else {
+                router.replace("/user/order/my-orders");
+            }
 
             // Notify admin
             await sendEmailToAdmin(emailData);
@@ -141,11 +147,11 @@ const OrderPage = () => {
                     </div>
                 </motion.div>
 
-                {/* Delivery Address Form */}
+                {/* Order Form */}
                 <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }} className="max-w-3xl mx-auto bg-white border border-gray-200 rounded-xl p-6 shadow-md space-y-4">
-                    <h2 className="text-2xl font-bold text-gray-900">Delivery Address</h2>
+                    <h2 className="text-xl font-semibold mb-5">Delivery Address</h2>
 
-                    <AddressForm onSubmit={onSubmit} isSubmitting={submitting} />
+                    <OrderForm onSubmit={onSubmit} isSubmitting={submitting} />
                 </motion.div>
 
             </div>

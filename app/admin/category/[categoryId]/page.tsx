@@ -11,9 +11,9 @@ import Navbar from "@/components/admin/Navbar";
 import Footer from "@/components/admin/Footer";
 import { Product } from "@/types/product";
 import Loader from "@/components/admin/Loader";
+import useAuthRedirect from "@/utils/useAuthRedirect";
 
 const AdminCategoryPage = () => {
-    // Redirect non-admin users
     useAdminRedirect();
 
     const params = useParams();

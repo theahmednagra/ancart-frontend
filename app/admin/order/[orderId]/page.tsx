@@ -10,9 +10,10 @@ import useAuthRedirect from "@/utils/useAuthRedirect";
 import UpdateOrderStatusForm from "@/components/admin/UpdateOrderStatusForm";
 import AdminCancelOrderForm from "@/components/admin/AdminCancelOrderForm";
 import Loader from "@/components/admin/Loader";
+import useAdminRedirect from "@/utils/useAdminRedirect";
 
 const OrderDetailPage = () => {
-    useAuthRedirect(); // Redirect unauthenticated users
+    useAdminRedirect();
 
     const { orderId } = useParams() as { orderId: string };
     const [order, setOrder] = useState<any>(null);
@@ -21,9 +22,8 @@ const OrderDetailPage = () => {
     useEffect(() => {
         const fetchOrder = async () => {
             try {
-                const res = await api.get("/admin/orders/get-all-orders");
-                const found = res.data.data.find((o: any) => o._id === orderId);
-                setOrder(found);
+                const res = await api.get(`/orders/get-order/${orderId}`);
+                setOrder(res?.data?.data);
             } catch {
                 toast.error("Failed to load order");
             } finally {
@@ -55,14 +55,15 @@ const OrderDetailPage = () => {
 
                     <h1 className="text-2xl font-bold text-white">Order Details</h1>
 
-                    {/* Delivery Address */}
+                    {/* Order Data */}
                     <div className="border border-zinc-700 rounded-xl p-5 bg-zinc-800">
-                        <h2 className="font-semibold text-white mb-2">Delivery Address</h2>
-                        <p className="text-gray-300">{order.deliveryAddress.fullName}</p>
-                        <p className="text-gray-300">{order.deliveryAddress.phone}</p>
+                        <h2 className="font-semibold text-white mb-2">Order Data</h2>
+                        <p className="text-gray-300">{order.orderData.fullName}</p>
+                        <p className="text-gray-300">{order.orderData.phone}</p>
                         <p className="text-gray-300">
-                            {order.deliveryAddress.addressLine}, {order.deliveryAddress.city}
+                            {order.orderData.addressLine}, {order.orderData.city}
                         </p>
+                        <p className="text-gray-200 text-sm font-medium mt-2">Payment Method: {order?.orderData.paymentMethod}</p>
                     </div>
 
                     {/* Items */}
