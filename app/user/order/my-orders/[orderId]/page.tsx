@@ -11,10 +11,11 @@ import useAuthRedirect from "@/utils/useAuthRedirect";
 import Loader from "@/components/public/Loader";
 
 const OrderDetailPage = () => {
-    useAuthRedirect(); // Redirect unauthenticated users to signin page
+    useAuthRedirect();
 
     const { orderId } = useParams() as { orderId: string };
     const router = useRouter();
+
     const [order, setOrder] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [showCancelModal, setShowCancelModal] = useState(false);
@@ -55,102 +56,148 @@ const OrderDetailPage = () => {
             const res = await api.post(`/payment/create/${orderId}`);
             const checkoutUrl = res.data.checkoutUrl;
             checkoutUrl && window.location.replace(checkoutUrl);
-
         } catch {
             toast.error("Failed to create payment");
         }
-    }
+    };
 
     if (loading) return <Loader />;
-    if (!order) return <div className="min-h-screen flex items-center justify-center text-gray-500">Order not found</div>;
+
+    if (!order)
+        return (
+            <>
+                <Navbar />
+                <div className="min-h-screen flex items-center justify-center text-zinc-500">
+                    Order not found
+                </div>
+                <Footer />
+            </>
+        );
 
     return (
         <>
             <Navbar />
 
-            <div className="min-h-screen max-w-5xl mx-auto px-4 py-10 space-y-8">
-                <h1 className="text-2xl font-bold text-[#02483D]">Order Details</h1>
+            <div className="min-h-screen w-full px-4 py-10 bg-white">
+                <div className="max-w-5xl mx-auto space-y-6">
 
-                {/* Order Data */}
-                <div className="border rounded-xl p-5">
-                    <h2 className="font-semibold mb-2">Order Data</h2>
-                    <p className="text-gray-600">{order?.orderData?.fullName}</p>
-                    <p className="text-gray-600">{order?.orderData?.phone}</p>
-                    <p className="text-gray-600">{order?.orderData?.addressLine}, {order?.orderData?.city}</p>
-                    <p className="text-gray-600 text-sm font-medium mt-2">Payment Method: {order?.orderData.paymentMethod}</p>
-                </div>
-
-                {/* Items */}
-                <div className="border rounded-xl p-5 space-y-4">
-                    <h2 className="font-semibold">Items</h2>
-
-                    {order.items.map((item: any) => (
-                        <div key={item._id} className="flex justify-between items-center text-sm">
-                            <div className="flex items-center space-x-2">
-                                {/* Product Image */}
-                                <img
-                                    src={item.product.image || "/placeholder.png"}
-                                    alt={item.product.name}
-                                    className="w-12 h-12 rounded object-cover shrink-0"
-                                />
-                                {/* Product Name and Quantity */}
-                                <span>
-                                    {item.product.name} × {item.quantity}
-                                </span>
-                            </div>
-                            {/* Price */}
-                            <span>Rs. {Number(item.price || 0).toLocaleString()}</span>
-                        </div>
-                    ))}
-
-                    {/* Total */}
-                    <div className="flex justify-between font-bold pt-3 border-t">
-                        <span>Total</span>
-                        <span>Rs. {Number(order.totalAmount || 0).toLocaleString()}</span>
+                    <div className="pb-4">
+                        <h1 className="text-3xl font-bold tracking-tight text-[#02483D]">Order Details</h1>
+                        <p className="text-zinc-500 text-xs font-mono mt-1 uppercase tracking-wider">Order ID: {order._id}</p>
                     </div>
-                </div>
 
-                {/* Status */}
-                <div className="border rounded-xl p-5">
-                    <h2 className="font-semibold mb-2">Current Status</h2>
-                    <p className={`text-gray-700 ${order.status === "CANCELLED" ? "text-red-500" : ""}`}>
-                        {/* {order.status} */}
-                        {order.status}
-                    </p>
-                    {order.status === "CANCELLED" && order.cancelReason && (
-                        <>
-                            <p className="text-gray-700">Cancelled By: <strong>Ancart Admin</strong></p>
-                            <p className="text-gray-700">Cancellation Reason: {order.cancelReason}</p>
-                        </>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        <div className="border border-zinc-200 rounded-xl p-6 bg-white shadow-sm">
+                            <h2 className="text-xs font-black text-zinc-500 uppercase tracking-widest border-b border-zinc-200/50 pb-4 mb-5">Account & Payment</h2>
+                            <div className="text-sm space-y-1">
+                                <p className="text-[#02483D] font-semibold">{order?.user?.fullname}</p>
+                                <p className="text-zinc-600">{order?.user?.email}</p>
+                                <p className={`italic ${order?.orderData.paymentMethod === "COD" ? "text-amber-600" : "text-blue-600"}`}>
+                                    {order?.orderData.paymentMethod === "COD" ? "Cash On Delivery" : "Card Payment"}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="border border-zinc-200 rounded-xl p-6 bg-white shadow-sm">
+                            <h2 className="text-xs font-black text-zinc-500 uppercase tracking-widest border-b border-zinc-200/50 pb-4 mb-5">Shipping Address</h2>
+                            <div className="text-zinc-700 text-sm space-y-1">
+                                <p className="font-semibold">{order.orderData.fullName}</p>
+                                <p className="text-zinc-600">{order.orderData.phone}</p>
+                                <p className="italic">{order.orderData.addressLine}, {order.orderData.city}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="border border-zinc-200 rounded-xl p-6 space-y-5 bg-white shadow-sm">
+                        <h2 className="text-xs font-black text-zinc-500 uppercase tracking-widest border-b border-zinc-200/50 pb-4 mb-5">Package Items</h2>
+
+                        <div className="divide-y divide-zinc-200/50">
+                            {order.items.map((item: any) => (
+                                <div key={item._id} className="flex justify-between items-center py-3 first:pt-0 last:pb-0">
+                                    <div className="flex items-center space-x-4">
+                                        <img
+                                            src={item.product?.image || "/placeholder.png"}
+                                            alt=""
+                                            className="w-14 h-14 rounded-md object-cover border border-zinc-200 shrink-0"
+                                        />
+                                        <div className="flex flex-col">
+                                            <span className="text-sm font-semibold text-[#02483D]">
+                                                {item.product?.name}
+                                            </span>
+                                            <span className="text-xs text-zinc-500 mt-1">
+                                                Quantity: <span className="text-zinc-700 font-bold">{item.quantity}</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <span className="text-zinc-700 font-mono text-sm">Rs. {Number(item.price).toLocaleString()}</span>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="flex justify-between items-center pt-5 border-t border-zinc-200">
+                            <span className="text-zinc-500 text-xs font-bold uppercase tracking-widest">Total Bill</span>
+                            <span className="font-semibold text-[#02483D]">
+                                Rs. {Number(order.totalAmount).toLocaleString()}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className="border border-zinc-200 rounded-xl p-6 bg-white shadow-sm">
+                        <h2 className="text-xs font-black text-zinc-500 uppercase tracking-widest border-b border-zinc-200/50 pb-4 mb-5">Order Status</h2>
+
+                        <p className={`text-sm font-semibold ${order.status === "CANCELLED" ? "text-red-500" :
+                            order.status === "DELIVERED" ? "text-green-600" :
+                                "text-[#02483D]"
+                            }`}>
+                            {order.status}
+                        </p>
+
+                        {order.status === "CANCELLED" && order.cancelReason && (
+                            <div className="space-y-2 text-sm mt-3">
+                                <p className="text-zinc-500">Cancelled By <span className="text-zinc-700 font-medium">Admin</span></p>
+                                <p className="text-red-500">Reason: "{order.cancelReason}"</p>
+                            </div>
+                        )}
+                    </div>
+
+                    {order.orderData.paymentMethod === "CARD" && order.status === "PENDING" && (
+                        <div className="border border-zinc-200 rounded-xl p-6 bg-white shadow-sm">
+                            <div className="flex items-center justify-between border-b border-zinc-200/50 pb-4 mb-5">
+                                <h2 className="text-xs font-black text-zinc-500 uppercase tracking-widest">Payment Action</h2>
+                            </div>
+                            <p className="text-zinc-400 text-xs mb-5 leading-relaxed italic">
+                                Complete your payment securely to confirm your order and begin processing without any delays.
+                            </p>
+                            <button
+                                disabled={processing}
+                                onClick={handlePayNow}
+                                className="px-4 py-3 font-semibold tracking-wide text-xs uppercase w-full bg-[#02483D] text-white rounded-lg hover:opacity-90 transition disabled:opacity-90"
+                            >
+                                {processing ? "Processing..." : "Pay Now"}
+                            </button>
+                        </div>
+                    )}
+
+                    {order.status !== "PAID" && order.status !== "CANCELLED" && order.status !== "DELIVERED" && order.status !== "SHIPPED" && (
+                        !(order.status === "CONFIRMED" && order.orderData.paymentMethod === "CARD") && (
+                            <div className="border border-red-200 rounded-xl p-6 bg-red-50">
+                                <div className="flex items-center justify-between border-b border-zinc-200/50 pb-4 mb-5">
+                                    <h2 className="text-xs font-black text-zinc-500 uppercase tracking-widest">Order Cancellation</h2>
+                                </div>
+                                <p className="text-zinc-400 text-xs mb-5 leading-relaxed italic">
+                                    You can cancel this order before processing or shipping, but this action cannot be undone.
+                                </p>
+                                <button
+                                    onClick={() => setShowCancelModal(true)}
+                                    className="px-4 py-3 font-semibold tracking-wide text-xs uppercase w-full bg-red-500 text-white rounded-lg hover:opacity-90 transition"
+                                >
+                                    Cancel Order
+                                </button>
+                            </div>
+                        )
                     )}
                 </div>
-
-                {/* Pay now */}
-                {order.status === "PAYMENT_PENDING" && (
-                    <div className="border rounded-xl p-5">
-                        <h2 className="font-semibold mb-4">Pay Now</h2>
-                        <button
-                            disabled={processing}
-                            onClick={handlePayNow}
-                            className="px-4 py-2 w-full bg-[#02483D] text-white rounded-lg font-medium hover:opacity-90 transition disabled:opacity-90"
-                        >
-                            {processing ? "Processing..." : "Pay Now"}
-                        </button>
-                    </div>
-                )}
-
-                {/* Cancel */}
-                {order.status !== "PAID" && order.status !== "CANCELLED" && order.status !== "DELIVERED" && order.status !== "SHIPPED" && (
-                    <div className="border rounded-xl p-5">
-                        <h2 className="font-semibold mb-4">Cancel Order</h2>
-                        <button
-                            onClick={() => setShowCancelModal(true)}
-                            className="px-4 py-2 w-full bg-red-500 text-white rounded-lg font-medium hover:opacity-90 transition"
-                        >
-                            Cancel Order
-                        </button>
-                    </div>
-                )}
             </div>
 
             <ConfirmationModal

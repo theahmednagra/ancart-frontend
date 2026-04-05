@@ -7,7 +7,6 @@ import Navbar from "@/components/admin/Navbar";
 import Footer from "@/components/admin/Footer";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import useAuthRedirect from "@/utils/useAuthRedirect";
 import Loader from "@/components/admin/Loader";
 import useAdminRedirect from "@/utils/useAdminRedirect";
 
@@ -35,33 +34,47 @@ const OrdersPage = () => {
     if (loading) return <Loader />;
 
     return (
-        <>
+        <div className="min-h-screen flex flex-col">
             <Navbar />
 
-            <div className="min-h-screen w-full px-4 py-10 bg-zinc-900/99 text-white">
-                <div className="min-h-screen max-w-5xl mx-auto space-y-6">
-                    <h1 className="text-3xl font-bold text-white">All Orders</h1>
+            <main className="grow w-full bg-zinc-900/99 px-4 py-12">
+                <div className="max-w-5xl mx-auto">
+                    <header className="mb-8">
+                        <h1 className="text-3xl font-bold text-white tracking-tight">Order Management</h1>
+                        <p className="text-zinc-400 text-sm mt-1">Review and manage customer transactions</p>
+                    </header>
 
                     {orders.length === 0 ? (
-                        <p className="text-gray-400">No orders yet.</p>
+                        <div className="text-center py-20 border border-dashed border-zinc-700 rounded-2xl">
+                            <p className="text-zinc-500">No orders found in the system.</p>
+                        </div>
                     ) : (
                         <div className="space-y-4">
-                            {orders.map(order => (
+                            {orders.map((order, index) => (
                                 <motion.div
                                     key={order._id}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: index * 0.05 }}
                                     onClick={() => router.push(`/admin/order/${order._id}`)}
-                                    className="cursor-pointer bg-zinc-800 border border-zinc-700 rounded-xl px-5 py-4 flex justify-between items-start hover:shadow-lg transition"
+                                    className="group relative cursor-pointer bg-zinc-800/50 hover:bg-zinc-800 border border-zinc-700/50 hover:border-zinc-500 rounded-2xl p-5 flex justify-between items-stretch transition-all duration-300"
                                 >
-                                    {/* Left info */}
-                                    <div className="space-y-2">
-                                        <div className="flex gap-3 items-center">
-                                            <p className="font-semibold text-white">Order #{order._id.slice(-6)}</p>
-                                            <p className="font-semibold text-gray-400 text-sm">({order.orderData.paymentMethod})</p>
+                                    {/* Left Side: Identification & Items */}
+                                    <div className="flex flex-col justify-between space-y-4">
+                                        <div>
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-[10px] font-semibold text-zinc-500 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-700">
+                                                    #{order._id.slice(-6).toUpperCase()}
+                                                </span>
+                                                <span className="text-xs text-zinc-400">
+                                                    {new Date(order.createdAt).toLocaleDateString('en-PK', {
+                                                        day: '2-digit', month: 'short', year: 'numeric'
+                                                    })}
+                                                </span>
+                                            </div>
                                         </div>
-                                        <p className="text-sm text-gray-400">{new Date(order.createdAt).toLocaleDateString()}</p>
 
                                         <div className="space-y-1 mt-2">
-                                            <h2 className="font-semibold text-gray-200">Item(s)</h2>
                                             {order.items.map((item: any) => (
                                                 <div key={item._id} className="flex justify-between text-sm text-gray-300 items-center">
                                                     <div className="flex items-center space-x-2">
@@ -69,13 +82,17 @@ const OrdersPage = () => {
                                                         <img
                                                             src={item.product.image || "/placeholder.png"}
                                                             alt={item.product.name}
-                                                            className="w-12 h-12 rounded object-cover shrink-0"
+                                                            className="w-12 h-12 rounded-md object-cover shrink-0"
                                                         />
                                                         {/* Product Name & Quantity */}
-                                                        <span>
-                                                            {item.product.name}
-                                                            <span className="font-semibold ml-0.5">× {item.quantity}</span>
-                                                        </span>
+                                                        <div className="flex flex-col">
+                                                            <span className="text-sm font-medium">
+                                                                {item.product?.name}
+                                                            </span>
+                                                            <span className="text-xs text-gray-500 font-semibold">
+                                                                Qty: {item.quantity}
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             ))}
@@ -83,22 +100,44 @@ const OrdersPage = () => {
                                     </div>
 
                                     {/* Right info */}
-                                    <div className="text-right space-y-2 shrink-0">
-                                        <p className="font-bold text-white">Rs. {Number(order.totalAmount || 0).toLocaleString()}</p>
-                                        <span className={`text-xs px-3 py-1 rounded-full border font-semibold ${order.status === "CANCELLED" ? "border-red-500 text-red-400" : order.status === "PENDING" ? "border-gray-200 text-gray-200" : "border-green-500 text-green-400"} `}>
+                                    <div className="min-w-35 flex flex-col justify-between items-end text-right self-stretch">
+                                        {/* Top Section: Payment & Price */}
+                                        <div className="space-y-1">
+                                            <p className={`text-[10px] font-semibold uppercase tracking-widest ${order?.orderData.paymentMethod === "COD" ? "text-amber-400" : "text-blue-400"}`}>
+                                                {order?.orderData.paymentMethod === "COD" ? "Cash On Delivery" : "Card Payment"}
+                                            </p>
+                                            <p className="font-semibold text-white">
+                                                Rs. {Number(order.totalAmount || 0).toLocaleString()}
+                                            </p>
+                                        </div>
+
+                                        {/* Bottom Section: Status Badge */}
+                                        <div className={`text-[10px] uppercase tracking-wider px-3 py-1 rounded-md border font-semibold 
+                                            ${order.status === "CANCELLED"
+                                                ? "border-red-500/50 bg-red-500/10 text-red-400"
+                                                : order.status === "PENDING"
+                                                    ? "border-zinc-600 text-zinc-400"
+                                                    // : order.status === "DELIVERED"
+                                                    //     ? "border-blue-600/50 bg-blue-500/10 text-blue-400"
+                                                    //     : order.status === "SHIPPED"
+                                                    //         ? "border-yellow-600/50 bg-yellow-200/10 text-yellow-400"
+                                                            : "border-green-600/50 bg-green-500/10 text-green-400"} 
+                                                `}>
                                             {order.status}
-                                        </span>
+                                        </div>
                                     </div>
+
                                 </motion.div>
                             ))}
                         </div>
                     )}
                 </div>
-            </div>
+            </main>
 
             <Footer />
-        </>
+        </div>
     );
 };
+
 
 export default OrdersPage;

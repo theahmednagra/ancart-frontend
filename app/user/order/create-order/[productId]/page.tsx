@@ -113,7 +113,7 @@ const OrderPage = () => {
                         <p className="text-xl font-bold text-[#02483D]">
                             Rs. {Number(product.price).toLocaleString()}
                         </p>
-                        <p className="text-gray-700 leading-relaxed whitespace-pre-line">{product.description}</p>
+                        <p className="text-gray-700 leading-relaxed whitespace-pre-line line-clamp-6">{product.description}</p>
 
                         <div className="flex items-center gap-4">
                             <label className="font-medium text-gray-800">Quantity:</label>

@@ -6,7 +6,6 @@ import api from "@/services/api";
 import Navbar from "@/components/admin/Navbar";
 import Footer from "@/components/admin/Footer";
 import { toast } from "sonner";
-import useAuthRedirect from "@/utils/useAuthRedirect";
 import UpdateOrderStatusForm from "@/components/admin/UpdateOrderStatusForm";
 import AdminCancelOrderForm from "@/components/admin/AdminCancelOrderForm";
 import Loader from "@/components/admin/Loader";
@@ -39,91 +38,109 @@ const OrderDetailPage = () => {
         return (
             <>
                 <Navbar />
-                <div className="min-h-screen flex items-center justify-center text-gray-400 bg-zinc-900">
+                <div className="min-h-screen flex items-center justify-center text-zinc-500 bg-zinc-900">
                     Order not found
                 </div>
                 <Footer />
             </>
         );
 
+    const isActionable = order.status !== "CANCELLED" && order.status !== "DELIVERED";
+
     return (
         <>
             <Navbar />
 
             <div className="min-h-screen w-full px-4 py-10 bg-zinc-900/99 text-white">
-                <div className="min-h-screen max-w-5xl mx-auto space-y-6">
+                <div className="max-w-5xl mx-auto space-y-6">
 
-                    <h1 className="text-2xl font-bold text-white">Order Details</h1>
-
-                    {/* Order Data */}
-                    <div className="border border-zinc-700 rounded-xl p-5 bg-zinc-800">
-                        <h2 className="font-semibold text-white mb-2">Order Data</h2>
-                        <p className="text-gray-300">{order.orderData.fullName}</p>
-                        <p className="text-gray-300">{order.orderData.phone}</p>
-                        <p className="text-gray-300">
-                            {order.orderData.addressLine}, {order.orderData.city}
-                        </p>
-                        <p className="text-gray-200 text-sm font-medium mt-2">Payment Method: {order?.orderData.paymentMethod}</p>
+                    <div className="pb-4">
+                        <h1 className="text-3xl font-bold text-white tracking-tight">Order Details</h1>
+                        <p className="text-zinc-500 text-xs font-mono mt-1 uppercase tracking-wider">Order ID: {order._id}</p>
                     </div>
 
-                    {/* Items */}
-                    <div className="border border-zinc-700 rounded-xl p-5 space-y-4 bg-zinc-800">
-                        <h2 className="font-semibold text-white">Items</h2>
-
-                        {order.items.map((item: any) => (
-                            <div key={item._id} className="flex justify-between items-center text-sm text-gray-300">
-                                <div className="flex items-center space-x-2">
-                                    {/* Product Image */}
-                                    <img
-                                        src={item.product?.image || "/placeholder.png"}
-                                        alt={item.product?.name || item.name}
-                                        className="w-12 h-12 rounded object-cover shrink-0"
-                                    />
-                                    {/* Product Name × Quantity */}
-                                    <span>
-                                        {item.product?.name || item.name} × {item.quantity}
-                                    </span>
-                                </div>
-                                {/* Price */}
-                                <span>Rs. {Number(item.price).toLocaleString()}</span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Account Details */}
+                        <div className="border border-zinc-700 rounded-xl p-6 bg-zinc-800 shadow-sm">
+                            <h2 className="text-xs font-black text-zinc-500 uppercase tracking-widest border-b border-zinc-700/50 pb-4 mb-5">Customer & Payment</h2>
+                            <div className="text-zinc-300 text-sm space-y-1">
+                                <p className="text-white font-semibold">{order?.user?.fullname}</p>
+                                <p className="text-zinc-400">{order?.user?.email}</p>
+                                <p className={`italic ${order?.orderData.paymentMethod === "COD" ? "text-amber-400" : "text-blue-400"}`}>
+                                    {order?.orderData.paymentMethod === "COD" ? "Cash On Delivery" : "Card Payment"}
+                                </p>
                             </div>
-                        ))}
+                        </div>
 
-                        <div className="flex justify-between font-bold pt-3 border-t border-zinc-700 text-gray-100">
-                            <span>Total</span>
-                            <span>Rs. {Number(order.totalAmount).toLocaleString()}</span>
+                        {/* Order Details */}
+                        <div className="border border-zinc-700 rounded-xl p-6 bg-zinc-800 shadow-sm">
+                            <h2 className="text-xs font-black text-zinc-500 uppercase tracking-widest border-b border-zinc-700/50 pb-4 mb-5">Shipping Address</h2>
+                            <div className="text-zinc-300 text-sm space-y-1">
+                                <p className="font-medium text-white">{order.orderData.fullName}</p>
+                                <p>{order.orderData.phone}</p>
+                                <p className="italic">{order.orderData.addressLine}, {order.orderData.city}</p>
+                            </div>
                         </div>
                     </div>
 
-                    {/* Status */}
-                    <div className="border border-zinc-700 rounded-xl p-5 bg-zinc-800">
-                        <h2 className="font-semibold text-white mb-2">Current Status</h2>
-                        <p className={`text-gray-300 ${order.status === "CANCELLED" ? "text-red-400" : ""}`}>
-                            {order.status}
-                        </p>
-                        {order.status === "CANCELLED" && order.cancelReason && (
-                            <>
-                                <p className="text-gray-300">Cancelled By: <strong>{order?.cancelledBy?.email}</strong></p>
-                                <p className="text-gray-300">Cancellation Reason: {order.cancelReason}</p>
-                            </>
-                        )}
+                    {/* Items */}
+                    <div className="border border-zinc-700 rounded-xl p-6 space-y-5 bg-zinc-800 shadow-sm">
+                        <h2 className="text-xs font-black text-zinc-500 uppercase tracking-widest border-b border-zinc-700/50 pb-4 mb-5">Package Items</h2>
+
+                        <div className="divide-y divide-zinc-700/50">
+                            {order.items.map((item: any) => (
+                                <div key={item._id} className="flex justify-between items-center py-3 first:pt-0 last:pb-0">
+                                    <div className="flex items-center space-x-4">
+                                        <img
+                                            src={item.product?.image || "/placeholder.png"}
+                                            alt=""
+                                            className="w-14 h-14 rounded-md object-cover border border-zinc-700 shrink-0"
+                                        />
+                                        <div className="flex flex-col">
+                                            <span className="text-sm font-semibold text-white">
+                                                {item.product?.name}
+                                            </span>
+                                            <span className="text-xs text-zinc-500 mt-1">
+                                                Quantity: <span className="text-zinc-300 font-bold">{item.quantity}</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <span className="text-zinc-300 font-mono text-sm">Rs. {Number(item.price).toLocaleString()}</span>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="flex justify-between items-center pt-5 border-t border-zinc-700">
+                            <span className="text-zinc-500 text-xs font-bold uppercase tracking-widest">Total Bill</span>
+                            <span className="font-semibold text-white">
+                                Rs. {Number(order.totalAmount).toLocaleString()}
+                            </span>
+                        </div>
                     </div>
 
-                    {/* Admin Forms */}
-                    <div className="space-y-4">
-                        {/* Update Status */}
-                        {order.status !== "CANCELLED" && order.status !== "DELIVERED" && (
+                    {/* Cancellation Log (Visible only if cancelled) */}
+                    {order.status === "CANCELLED" && (
+                        <div className="border border-red-900/50 rounded-xl p-6 bg-red-900/5">
+                            <h2 className="text-xs font-black text-red-500 uppercase tracking-widest border-b border-zinc-700/50 pb-4 mb-5">Cancellation Details</h2>
+                            <div className="space-y-2 text-sm">
+                                <p className="text-zinc-400">Processed By: <span className="text-zinc-200 font-medium">{order?.cancelledBy?.email || "Admin"}</span></p>
+                                <p className="text-zinc-400">Reason: <span className="text-red-400">"{order.cancelReason}"</span></p>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Admin Actions */}
+                    {isActionable && (
+                        <div className="grid grid-cols-1 gap-6">
                             <UpdateOrderStatusForm
                                 orderId={orderId}
                                 currentStatus={order.status}
+                                paymentMethod={order.orderData.paymentMethod}
                                 onUpdate={(newStatus) =>
                                     setOrder((prev: any) => ({ ...prev, status: newStatus }))
                                 }
                             />
-                        )}
 
-                        {/* Cancel Order */}
-                        {order.status !== "CANCELLED" && order.status !== "DELIVERED" && (
                             <AdminCancelOrderForm
                                 orderId={orderId}
                                 onCancel={(data) =>
@@ -135,8 +152,14 @@ const OrderDetailPage = () => {
                                     }))
                                 }
                             />
-                        )}
-                    </div>
+                        </div>
+                    )}
+
+                    {!isActionable && order.status !== "CANCELLED" && (
+                        <div className="text-center py-6 border border-dashed border-zinc-700 rounded-xl">
+                            <p className="text-zinc-500 text-sm italic">This order has been delivered and is now read-only.</p>
+                        </div>
+                    )}
                 </div>
             </div>
 
