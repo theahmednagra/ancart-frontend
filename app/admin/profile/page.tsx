@@ -66,7 +66,7 @@ const ProfilePage = () => {
                                 <Package size={22} />
                             </div>
 
-                            <p className="font-semibold text-white">Orders</p>
+                            <p className="text-lg font-semibold text-white">Orders</p>
                             <p className="text-sm text-gray-400 mt-1 mb-4">
                                 Review, update and manage incoming orders
                             </p>
@@ -88,7 +88,7 @@ const ProfilePage = () => {
                                 <LogOut size={22} />
                             </div>
 
-                            <p className="font-semibold text-white">Sign out</p>
+                            <p className="text-lg font-semibold text-white">Sign out</p>
                             <p className="text-sm text-gray-400 mt-1 mb-4">
                                 End your admin session securely
                             </p>

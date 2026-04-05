@@ -5,13 +5,13 @@ import { useRouter } from "next/navigation";
 import api from "@/services/api";
 import Navbar from "@/components/public/Navbar";
 import Footer from "@/components/public/Footer";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import useAuthRedirect from "@/utils/useAuthRedirect";
 import Loader from "@/components/public/Loader";
 
 const MyOrdersPage = () => {
-    useAuthRedirect(); // Redirect unauthenticated users to signin page
+    useAuthRedirect();
 
     const router = useRouter();
     const [orders, setOrders] = useState<any[]>([]);
@@ -21,8 +21,11 @@ const MyOrdersPage = () => {
         const fetchOrders = async () => {
             try {
                 const res = await api.get("/orders/get-user-orders");
-                setOrders(res.data.data);
-
+                // Sort by newest first
+                const sorted = res.data.data.sort((a: any, b: any) =>
+                    new Date(b.createdAt).getTime() - new Date(a.getTime).getTime()
+                );
+                setOrders(sorted);
             } catch {
                 toast.error("Failed to load orders");
             } finally {
@@ -35,65 +38,101 @@ const MyOrdersPage = () => {
     if (loading) return <Loader />
 
     return (
-        <>
+        <div className="min-h-screen flex flex-col">
             <Navbar />
 
-            <div className="min-h-screen max-w-5xl mx-auto px-4 py-10 space-y-6">
-                <h1 className="text-3xl font-bold text-[#02483D]">My Orders</h1>
+            <main className="grow max-w-5xl mx-auto w-full px-4 py-12">
+                <header className="mb-8">
+                    <h1 className="text-3xl font-bold text-[#02483D] tracking-tight">My Orders</h1>
+                    <p className="text-gray-500 text-sm mt-1">Track and manage your recent purchases</p>
+                </header>
 
                 {orders.length === 0 ? (
-                    <p className="text-gray-600">You haven’t placed any orders yet.</p>
+                    <div className="text-center py-20 bg-white border border-dashed border-gray-300 rounded-2xl">
+                        <p className="text-gray-500">You haven’t placed any orders yet.</p>
+                    </div>
                 ) : (
                     <div className="space-y-4">
-                        {orders.map(order => (
-                            <motion.div
-                                key={order._id}
-                                onClick={() => router.push(`/user/order/my-orders/${order._id}`)}
-                                className="cursor-pointer border rounded-xl px-5 py-4 flex justify-between items-start hover:shadow-md transition"
-                            >
-                                <div className="space-y-1">
-                                    <div className="flex gap-3 items-center">
-                                        <p className="font-semibold text-gray-900">Order #{order._id.slice(-6)}</p>
-                                        <p className="font-semibold text-gray-600 text-sm">({order.orderData.paymentMethod})</p>
-                                    </div>
-                                    <p className="text-sm text-gray-500">{new Date(order.createdAt).toLocaleDateString()}</p>
-
-                                    <div className="space-y-1 mt-2">
-                                        <h2 className="font-semibold text-gray-600">Item(s)</h2>
-                                        {order.items.map((item: any) => (
-                                            <div key={item._id} className="flex justify-between text-sm text-gray-600 items-center">
-                                                <div className="flex items-center space-x-2">
-                                                    {/* Product Image */}
-                                                    <img
-                                                        src={item.product.image}
-                                                        alt={item.product.name}
-                                                        className="w-12 h-12 rounded object-cover shrink-0"
-                                                    />
-                                                    {/* Product Name & Quantity */}
-                                                    <span>
-                                                        {item.product.name}
-                                                        <span className="font-semibold ml-0.5">× {item.quantity}</span>
-                                                    </span>
-                                                </div>
+                        <AnimatePresence>
+                            {orders.map((order, index) => (
+                                <motion.div
+                                    key={order._id}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: index * 0.05 }}
+                                    onClick={() => router.push(`/user/order/my-orders/${order._id}`)}
+                                    className="group cursor-pointer bg-white border border-gray-200 hover:border-[#02483D]/30 rounded-2xl p-5 flex justify-between items-stretch transition-all duration-300 hover:shadow-sm"
+                                >
+                                    {/* Left Side: Order Info & Items */}
+                                    <div className="flex flex-col justify-between space-y-5">
+                                        <div>
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-[10px] font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded uppercase tracking-wider">
+                                                    #{order._id.slice(-6).toUpperCase()}
+                                                </span>
+                                                <span className="text-xs text-gray-400 font-medium">
+                                                    {new Date(order.createdAt).toLocaleDateString('en-PK', {
+                                                        day: '2-digit', month: 'short', year: 'numeric'
+                                                    })}
+                                                </span>
                                             </div>
-                                        ))}
-                                    </div>
-                                </div>
 
-                                <div className="space-y-2 shrink-0 text-right">
-                                    <p className="font-bold text-[#02483D]">Rs. {Number(order.totalAmount || 0).toLocaleString()}</p>
-                                    <span className={`text-xs px-3 py-1 rounded-full border font-semibold ${order.status === "CANCELLED" ? "border-red-400 text-red-500" : order.status === "PENDING" ? "border-gray-800 text-gray-800" : "border-green-500 text-green-600"} `}>
-                                        {order.status}
-                                    </span>
-                                </div>
-                            </motion.div>
-                        ))}
+                                            <div className="space-y-3 mt-4">
+                                                {order.items.map((item: any) => (
+                                                    <div key={item._id} className="flex items-center space-x-3">
+                                                        <img
+                                                            src={item.product?.image || "/placeholder.png"}
+                                                            alt=""
+                                                            className="w-12 h-12 rounded-md object-cover shrink-0"
+                                                        />
+                                                        <div className="flex flex-col">
+                                                            <span className="text-sm font-medium text-gray-800">
+                                                                {item.product?.name}
+                                                            </span>
+                                                            <span className="text-xs text-gray-500 font-semibold">
+                                                                Qty: {item.quantity}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Right Side: Price & Status */}
+                                    <div className="flex flex-col justify-between items-end text-right min-w-35 self-stretch">
+                                        <div className="space-y-1">
+                                            <p className={`text-[10px] font-semibold uppercase tracking-widest ${order?.orderData.paymentMethod === "COD" ? "text-amber-500" : "text-blue-500"}`}>
+                                                {order?.orderData.paymentMethod === "COD" ? "Cash On Delivery" : "Card Payment"}
+                                            </p>
+                                            <p className="font-semibold text-gray-900">
+                                                Rs. {Number(order.totalAmount || 0).toLocaleString()}
+                                            </p>
+                                        </div>
+
+                                        <div className={`text-[10px] uppercase tracking-wider px-3 py-1 rounded-md border font-semibold 
+                                            ${order.status === "CANCELLED"
+                                                ? "border-red-300 bg-red-50 text-red-600"
+                                                : order.status === "PENDING"
+                                                    ? "border-gray-300 bg-gray-50 text-gray-600"
+                                                    // : order.status === "DELIVERED"
+                                                    //     ? "border-blue-300 bg-blue-50 text-blue-600"
+                                                    //     : order.status === "SHIPPED"
+                                                    //         ? "border-yellow-300 bg-yellow-50 text-yellow-600"
+                                                            : "border-green-300 bg-green-50 text-green-600"}
+                                                `}>
+                                            {order.status}
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </AnimatePresence>
                     </div>
                 )}
-            </div>
+            </main>
 
             <Footer />
-        </>
+        </div>
     );
 };
 

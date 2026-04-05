@@ -74,7 +74,7 @@ const ProfilePage = () => {
                             <Package size={22} />
                         </div>
 
-                        <p className="font-semibold text-gray-800">Orders</p>
+                        <p className="text-lg font-semibold text-gray-800">Orders</p>
                         <p className="text-sm text-gray-600 mt-1 mb-4">
                             Track and manage purchases
                         </p>
@@ -95,7 +95,7 @@ const ProfilePage = () => {
                             <LogOut size={22} />
                         </div>
 
-                        <p className="font-semibold text-gray-800">Sign out</p>
+                        <p className="text-lg font-semibold text-gray-800">Sign out</p>
                         <p className="text-sm text-gray-600 mt-1 mb-4">
                             End your current session
                         </p>
