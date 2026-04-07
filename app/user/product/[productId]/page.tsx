@@ -93,10 +93,10 @@ const ProductPage = () => {
                                 onClick={handleOrderNow}
                                 className={`flex-1 py-3 px-5 rounded-lg font-medium transition-transform border text-center shadow-sm ${isOutOfStock
                                     ? "border-gray-300 text-gray-400 cursor-not-allowed"
-                                    : "border-[#02483D] text-[#02483D] hover:scale-104"
+                                    : "border-[#02483D] text-[#02483D] hover:scale-102 hover:shadow-md active:scale-100"
                                     }`}
                             >
-                                {placingOrder ? "Loading..." : "Order Now"}
+                                {placingOrder ? "Processing..." : "Order Now"}
                             </button>
                         </div>
 

@@ -138,7 +138,7 @@ const OrderPage = () => {
                                     <Plus size={18} className="text-gray-600" />
                                 </button>
                             </div>
-                            <span className="text-gray-600">Available: {product.stock}</span>
+                            {/* <span className="text-gray-600">Available: {product.stock}</span> */}
                         </div>
 
                         <div className="text-lg font-semibold">

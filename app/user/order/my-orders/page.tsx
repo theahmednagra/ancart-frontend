@@ -68,7 +68,7 @@ const MyOrdersPage = () => {
                                         <div>
                                             <div className="flex items-center gap-3">
                                                 <span className="text-[10px] font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded uppercase tracking-wider">
-                                                    #{order._id.slice(-6).toUpperCase()}
+                                                    {order.orderId}
                                                 </span>
                                                 <span className="text-xs text-gray-400 font-medium">
                                                     {new Date(order.createdAt).toLocaleDateString('en-PK', {
@@ -83,7 +83,7 @@ const MyOrdersPage = () => {
                                                         <img
                                                             src={item.product?.image || "/placeholder.png"}
                                                             alt=""
-                                                            className="w-12 h-12 rounded-md object-cover shrink-0"
+                                                            className="w-12 h-12 rounded-sm object-cover shrink-0"
                                                         />
                                                         <div className="flex flex-col">
                                                             <span className="text-sm font-medium text-gray-800">

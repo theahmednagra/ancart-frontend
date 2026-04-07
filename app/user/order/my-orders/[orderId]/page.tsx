@@ -83,7 +83,7 @@ const OrderDetailPage = () => {
 
                     <div className="pb-4">
                         <h1 className="text-3xl font-bold tracking-tight text-[#02483D]">Order Details</h1>
-                        <p className="text-zinc-500 text-xs font-mono mt-1 uppercase tracking-wider">Order ID: {order._id}</p>
+                        <p className="text-zinc-500 text-xs font-mono mt-1 uppercase tracking-wider">Order ID: {order.orderId}</p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -119,10 +119,10 @@ const OrderDetailPage = () => {
                                         <img
                                             src={item.product?.image || "/placeholder.png"}
                                             alt=""
-                                            className="w-14 h-14 rounded-md object-cover border border-zinc-200 shrink-0"
+                                            className="w-14 h-14 rounded-sm object-cover shrink-0"
                                         />
                                         <div className="flex flex-col">
-                                            <span className="text-sm font-semibold text-[#02483D]">
+                                            <span className="text-sm font-semibold text-zinc-800">
                                                 {item.product?.name}
                                             </span>
                                             <span className="text-xs text-zinc-500 mt-1">
@@ -146,17 +146,19 @@ const OrderDetailPage = () => {
                     <div className="border border-zinc-200 rounded-xl p-6 bg-white shadow-sm">
                         <h2 className="text-xs font-black text-zinc-500 uppercase tracking-widest border-b border-zinc-200/50 pb-4 mb-5">Order Status</h2>
 
-                        <p className={`text-sm font-semibold ${order.status === "CANCELLED" ? "text-red-500" :
-                            order.status === "DELIVERED" ? "text-green-600" :
-                                "text-[#02483D]"
-                            }`}>
-                            {order.status}
-                        </p>
+                        <div className="flex items-center justify-between text-sm">
+                            <span className="text-zinc-500 text-xs font-bold uppercase tracking-widest">Current State</span>
+                            <p className={`text-sm font-semibold ${order.status === "CANCELLED" ? "text-red-500" :
+                                order.status === "DELIVERED" ? "text-green-600" :
+                                    "text-[#02483D]"
+                                }`}>
+                                {order.status}
+                            </p>
+                        </div>
 
                         {order.status === "CANCELLED" && order.cancelReason && (
-                            <div className="space-y-2 text-sm mt-3">
-                                <p className="text-zinc-500">Cancelled By <span className="text-zinc-700 font-medium">Admin</span></p>
-                                <p className="text-red-500">Reason: "{order.cancelReason}"</p>
+                            <div className="text-center text-sm mt-3">
+                                <p className="text-red-500 italic">{order.cancelReason}</p>
                             </div>
                         )}
                     </div>

@@ -8,7 +8,7 @@ const ProductCard = ({ product }: { product: any }) => {
     return (
         <div
             onClick={() => router.push(`/user/product/${product._id}`)}
-            className="bg-white rounded-2xl border border-gray-200 p-4 hover:shadow-lg transition cursor-pointer relative"
+            className="bg-white rounded-2xl border border-gray-200 p-4 hover:shadow-lg transition cursor-pointer relative group"
         >
             {product.stock <= 5 && (
                 <div className="text-xs z-10 shadow px-1.5 py-0.5 rounded-full text-neutral-600 bg-gray-50 opacity-90 absolute right-2 top-2">Almost sold out</div>
@@ -16,7 +16,7 @@ const ProductCard = ({ product }: { product: any }) => {
 
             {/* Product Image */}
             <div className="aspect-square mb-4 flex flex-col items-center justify-center">
-                <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-300 rounded-xl hover:scale-105" />
+                <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-300 rounded-xl group-hover:scale-105" />
             </div>
 
             {/* Product Info */}
