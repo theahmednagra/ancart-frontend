@@ -8,11 +8,11 @@ const ProductCard = ({ product }: { product: any }) => {
     return (
         <div
             onClick={() => router.push(`/admin/products/${product._id}`)}
-            className="bg-zinc-900/80 rounded-2xl overflow-hidden border border-white/10 cursor-pointer hover:border-white/20 hover:shadow-xl transition-all"
+            className="bg-zinc-900/80 rounded-2xl overflow-hidden border border-white/10 cursor-pointer hover:border-white/20 hover:shadow-xl transition-all group"
         >
             {/* Product Image */}
             <div className="aspect-square bg-white p-4 overflow-hidden flex items-center justify-center">
-                <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-300 hover:scale-105" />
+                <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
             </div>
 
             {/* Product Info */}

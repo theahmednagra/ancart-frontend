@@ -64,7 +64,7 @@ const OrdersPage = () => {
                                         <div>
                                             <div className="flex items-center gap-3">
                                                 <span className="text-[10px] font-semibold text-zinc-500 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-700">
-                                                    #{order._id.slice(-6).toUpperCase()}
+                                                    {order.orderId}
                                                 </span>
                                                 <span className="text-xs text-zinc-400">
                                                     {new Date(order.createdAt).toLocaleDateString('en-PK', {
@@ -74,7 +74,7 @@ const OrdersPage = () => {
                                             </div>
                                         </div>
 
-                                        <div className="space-y-1 mt-2">
+                                        <div className="space-y-3">
                                             {order.items.map((item: any) => (
                                                 <div key={item._id} className="flex justify-between text-sm text-gray-300 items-center">
                                                     <div className="flex items-center space-x-2">
@@ -82,7 +82,7 @@ const OrdersPage = () => {
                                                         <img
                                                             src={item.product.image || "/placeholder.png"}
                                                             alt={item.product.name}
-                                                            className="w-12 h-12 rounded-md object-cover shrink-0"
+                                                            className="w-12 h-12 rounded-sm object-cover shrink-0"
                                                         />
                                                         {/* Product Name & Quantity */}
                                                         <div className="flex flex-col">

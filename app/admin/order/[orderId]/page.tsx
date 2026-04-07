@@ -56,7 +56,7 @@ const OrderDetailPage = () => {
 
                     <div className="pb-4">
                         <h1 className="text-3xl font-bold text-white tracking-tight">Order Details</h1>
-                        <p className="text-zinc-500 text-xs font-mono mt-1 uppercase tracking-wider">Order ID: {order._id}</p>
+                        <p className="text-zinc-500 text-xs font-mono mt-1 uppercase tracking-wider">Order ID: {order.orderId}</p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -94,7 +94,7 @@ const OrderDetailPage = () => {
                                         <img
                                             src={item.product?.image || "/placeholder.png"}
                                             alt=""
-                                            className="w-14 h-14 rounded-md object-cover border border-zinc-700 shrink-0"
+                                            className="w-14 h-14 rounded-sm object-cover border border-zinc-700 shrink-0"
                                         />
                                         <div className="flex flex-col">
                                             <span className="text-sm font-semibold text-white">

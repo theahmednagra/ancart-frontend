@@ -41,12 +41,12 @@ const OrderForm = ({ onSubmit, isSubmitting }: { onSubmit: (data: OrderDataInput
       <div className="pt-4 border-t">
         <h3 className="text-lg font-semibold mb-3">Payment Method</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <label className="flex items-center justify-between p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition has-checked:border-[#02483D] has:checked:bg-[#02483d05]">
+          <label className="flex items-center justify-between px-4 py-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition has-checked:border-[#02483D] has:checked:bg-[#02483d05]">
             <span className="font-medium">Cash on Delivery</span>
             <input type="radio" value="COD" {...register("paymentMethod")} className="w-4 h-4 accent-[#02483D]" />
           </label>
 
-          <label className="flex items-center justify-between p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition has-checked:border-[#02483D] has-checked:bg-[#02483d05]">
+          <label className="flex items-center justify-between px-4 py-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition has-checked:border-[#02483D] has-checked:bg-[#02483d05]">
             <span className="font-medium">Pay Now (Card)</span>
             <input type="radio" value="CARD" {...register("paymentMethod")} className="w-4 h-4 accent-[#02483D]" />
           </label>
