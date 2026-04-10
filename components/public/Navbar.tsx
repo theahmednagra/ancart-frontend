@@ -40,6 +40,7 @@ const Navbar = () => {
                     <div
                         onClick={() => router.push("/")}
                         className="text-2xl font-bold text-white cursor-pointer"
+                        style={{ fontFamily: "Encode Sans, sans-serif" }}
                     >
                         ancart
                     </div>

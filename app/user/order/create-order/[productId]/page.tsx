@@ -126,7 +126,7 @@ const OrderPage = () => {
                                     className="px-3 py-2 bg-white disabled:opacity-40 disabled:cursor-not-allowed"
                                 >
                                     <Minus size={18} className="text-gray-600" />
-                                </button>
+                                </button      >
 
                                 <span className="w-8 text-center text-gray-800 font-semibold">{quantity}</span>
 
@@ -142,7 +142,7 @@ const OrderPage = () => {
                         </div>
 
                         <div className="text-lg font-semibold">
-                            Total: Rs. {Number(totalAmount || 0).toLocaleString()}
+                            Total: Rs. {Number(totalAmount || 0).toLocaleString()} 
                         </div>
                     </div>
                 </motion.div>

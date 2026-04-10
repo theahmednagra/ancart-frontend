@@ -29,7 +29,9 @@ const Navbar = () => {
     const isAdmin = user?.role === "ADMIN";
 
     return (
-        <header className="sticky top-0 z-50 bg-black/90 backdrop-blur-xl border-b border-white/10">
+        <header
+            className="sticky top-0 z-50 bg-black/90 backdrop-blur-xl border-b border-white/10"
+        >
             <div className="max-w-7xl mx-auto px-4 h-16 flex md:grid md:grid-cols-3 items-center">
 
                 {/* LEFT - Logo */}
@@ -37,6 +39,7 @@ const Navbar = () => {
                     <div
                         onClick={() => router.push("/admin")}
                         className="text-2xl font-bold cursor-pointer text-white hover:text-white/90 transition"
+                        style={{ fontFamily: "Encode Sans, sans-serif" }}
                     >
                         ancart
                     </div>
